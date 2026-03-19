@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f2;
+      --ink: #1a1917;
+      --muted: #9a9890;
+      --border: #e0ddd7;
+      --pop: #2a9d8f;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      min-height: 100vh;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    header {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 52px 0 40px;
+    }
+
+    .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    header h1 em {
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .tagline .highlight {
+      color: var(--pop);
+      font-style: italic;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: 620px;
+      margin: 0 auto;
+      height: 1px;
+      background: var(--border);
+      position: relative;
+    }
+
+    .divider::after {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: var(--pop);
+      background: var(--bg);
+      padding-right: 10px;
+    }
+
+    /* ── Main ── */
+    main {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 52px 0 100px;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── Project cards ── */
+    .projects {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 16px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: padding-left 0.2s ease;
+      cursor: pointer;
+    }
+
+    .project:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .project:hover {
+      padding-left: 10px;
+    }
+
+    .project:hover .project-name {
+      color: var(--pop);
+    }
+
+    .project-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .project-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .project-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 2px;
+      white-space: nowrap;
+      margin-top: 4px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .project:hover .project-tag {
+      border-color: var(--pop);
+      color: var(--pop);
+    }
+
+    /* ── Footer ── */
+    footer {
+      max-width: 620px;
+      margin: 0 auto;
+      padding-bottom: 48px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .left::before {
+      content: '— ';
+    }
+
+    /* ── Cursor dot ── */
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--pop);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      transition: transform 0.12s ease, opacity 0.3s;
+      opacity: 0;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor-dot" id="dot"></div>
+
+  <header>
+    <p class="eyebrow">Personal space</p>
+    <h1>Projects &amp; Pages</em></h1>
+    <p class="tagline">A loose collection of projects — some finished, some <span class="highlight">perpetually in progress.</span></p>
+  </header>
+
+  <div class="divider"></div>
+
+  <main>
+    <p class="section-label">Projects</p>
+
+    <div class="projects">
+
+      <!-- ✏️ Edit each project: update the name, description, tag, and href -->
+
+      <a class="project" href="#">
+        <div>
+          <div class="project-name">Fantasy Baseball Draft Board 2026</div>
+          <div class="project-desc">An optimized draft board using Z-Scores and positional scarcity.</div>
+        </div>
+        <div class="project-tag">web</div>
+      </a>
+
+      <a class="project" href="#">
+        <div>
+          <div class="project-name">Project Two</div>
+          <div class="project-desc">Placeholder</div>
+        </div>
+        <div class="project-tag">tool</div>
+      </a>
+
+      <a class="project" href="#">
+        <div>
+          <div class="project-name">Project Three</div>
+          <div class="project-desc">Another One</div>
+        </div>
+        <div class="project-tag">wip</div>
+      </a>
+
+      <a class="project" href="#">
+        <div>
+          <div class="project-name">Project Four</div>
+          <div class="project-desc">And Another One</div>
+        </div>
+        <div class="project-tag">fun</div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <span class="left">Insert existential nonsense here.</span>
+    <span>✦</span>
+  </footer>
+
+  <script>
+    // Subtle custom cursor dot
+    const dot = document.getElementById('dot');
+    let visible = false;
+    document.addEventListener('mousemove', e => {
+      dot.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+      if (!visible) { dot.style.opacity = '1'; visible = true; }
+    });
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = '0'; visible = false;
+    });
+
+    // Staggered fade-in on load
+    document.querySelectorAll('.project').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.style.transition = `opacity 0.4s ease ${i * 0.08}s, transform 0.4s ease ${i * 0.08}s, padding-left 0.2s ease`;
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 80 + i * 80);
+    });
+  </script>
+
+</body>
+</html>
