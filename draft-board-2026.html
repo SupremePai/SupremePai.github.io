@@ -437,6 +437,78 @@ function teamStats(){
   });
   return st;
 }
+// Positional urgency: slot depth scores (lower = scarcer)
+var SLOT_DEPTH={C:2,SS:2,"2B":3,"3B":3,"1B":3,LF:4,CF:4,RF:4,SP:4,RP:3,OF:5,UTIL:6,CI:5,MI:5,P:5,BN:8};
+// Urgency weight scale: moderate influence
+var URGENCY_SCALE=0.6;
+
+function getUnfilledSlots(){
+  // Returns map of slotId -> slot for all unfilled slots
+  var out={};
+  ROSTER_SLOTS.forEach(function(s){if(!myTeam[s.id])out[s.id]=s;});
+  return out;
+}
+function getPositionalUrgency(){
+  // For each eligible position type, how many unfilled slots need it?
+  // Returns map: pos -> urgency score (0 if fully filled)
+  var unfilled=getUnfilledSlots();
+  var filled=teamPlayers().length;
+  var totalSlots=ROSTER_SLOTS.length;
+  // Scale urgency 0->1 as draft progresses (0 at start, 1 near end)
+  var draftProgress=filled/totalSlots;
+  var urgencyMult=draftProgress*URGENCY_SCALE;
+
+  var posNeed={};
+  Object.keys(unfilled).forEach(function(sid){
+    var slot=unfilled[sid];
+    slot.elig.forEach(function(pos){
+      posNeed[pos]=(posNeed[pos]||0)+1;
+    });
+  });
+  // Normalize by slot depth — scarcer positions get higher urgency
+  var urgency={};
+  Object.keys(posNeed).forEach(function(pos){
+    var depth=SLOT_DEPTH[pos]||5;
+    urgency[pos]=(posNeed[pos]/depth)*urgencyMult;
+  });
+  return urgency;
+}
+function playerPositionalBonus(player, urgency){
+  var pp=player.elig.toUpperCase().split("/");
+  var best=0;
+  pp.forEach(function(pos){if(urgency[pos]&&urgency[pos]>best)best=urgency[pos];});
+  return best;
+}
+function getUrgentNeeds(){
+  // Returns top 2 most urgent unfilled slot types with best available player
+  var unfilled=getUnfilledSlots();
+  var tn={};teamPlayers().forEach(function(p){tn[p.name]=true;});
+  var urgency=getPositionalUrgency();
+  // Get unique position groups needed
+  var posGroups={};
+  Object.keys(unfilled).forEach(function(sid){
+    var slot=unfilled[sid];
+    // Key by primary position label
+    var key=slot.label;
+    if(!posGroups[key]){posGroups[key]={label:key,elig:slot.elig,count:0,urgScore:0};}
+    posGroups[key].count++;
+    slot.elig.forEach(function(pos){posGroups[key].urgScore+=(urgency[pos]||0);});
+  });
+  // Sort by urgency score
+  var sorted=Object.keys(posGroups).map(function(k){return posGroups[k];});
+  sorted.sort(function(a,b){return b.urgScore-a.urgScore;});
+  var top2=sorted.slice(0,2);
+  // For each, find best available player
+  return top2.map(function(pg){
+    var avail=players.filter(function(p){
+      if(drafted.has(p.name)||tn[p.name])return false;
+      var pp=p.elig.toUpperCase().split("/");
+      for(var i=0;i<pg.elig.length;i++){if(pp.indexOf(pg.elig[i])>=0)return true;}
+      return false;
+    }).sort(function(a,b){return b.z_adj-a.z_adj;});
+    return {label:pg.label, count:pg.count, best:avail[0]||null};
+  }).filter(function(x){return x.best!==null;});
+}
 function getRecs(){
   var tn={};teamPlayers().forEach(function(p){tn[p.name]=true;});
   var st=teamStats();
@@ -448,16 +520,20 @@ function getRecs(){
     else if(c!=="z_era"&&c!=="z_whip"&&st[c]<1.5)wP[c]=true;
   });
   var clab={z_hr:"HR",z_r:"R",z_rbi:"RBI",z_sb:"SB",z_obp:"OBP",z_k:"K",z_era:"ERA",z_whip:"WHIP",z_qs:"QS",z_svhld:"SV+HLD"};
+  var urgency=getPositionalUrgency();
   var avail=players.filter(function(p){return !drafted.has(p.name)&&!tn[p.name];});
   avail.forEach(function(p){
-    var sc=p.z_adj,cats=p.type==="H"?HCAT:PCAT,wk=p.type==="H"?wH:wP;
+    var sc=p.z_adj;
+    var cats=p.type==="H"?HCAT:PCAT,wk=p.type==="H"?wH:wP;
     cats.forEach(function(c){var b=(CW[c]-1.0)*(p[c]||0);if(wk[c])b*=2.0;sc+=b;});
+    // Add positional urgency bonus (moderate)
+    sc+=playerPositionalBonus(p,urgency);
     p._rs=sc;
     var reasons=[];
     cats.forEach(function(c){if(wk[c]&&(p[c]||0)>0.3)reasons.push(clab[c]);});
     p._rw=reasons.length>0?"Fills: "+reasons.join(", "):"Best available";
   });
-  return avail.sort(function(a,b){return b._rs-a._rs;}).slice(0,5);
+  return avail.sort(function(a,b){return b._rs-a._rs;}).slice(0,3);
 }
 function buildScorecard(){
   var st=teamStats(),n=teamPlayers().length;
@@ -473,7 +549,11 @@ function buildScorecard(){
 }
 function buildRecs(){
   var recs=getRecs();
-  var h='<div class="recs-panel"><div class="team-panel-hdr">Recommendations <span style="font-size:10px;font-weight:400;color:var(--muted)">(HR/OBP+7.5% K+10%)</span></div>';
+  var urgent=getUrgentNeeds();
+  var filled=teamPlayers().length;
+  var h='<div class="recs-panel">';
+  // Section 1: Top 3 value
+  h+='<div class="team-panel-hdr">Best Available <span style="font-size:10px;font-weight:400;color:var(--muted)">(value + positional need)</span></div>';
   if(!recs.length){h+='<div class="team-empty">No recommendations</div>';}
   else{recs.forEach(function(p){
     var esc=p.name.replace(/&/g,"&amp;");
@@ -483,6 +563,20 @@ function buildRecs(){
     h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+' &middot; Raw Z '+p.z_raw.toFixed(2)+'</div>';
     h+='<div class="rec-why">'+p._rw+'</div></div>';
   });}
+  // Section 2: Urgent positional needs
+  if(urgent.length>0&&filled>0){
+    h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">';
+    h+='<div class="team-panel-hdr">Fill a Slot <span style="font-size:10px;font-weight:400;color:var(--muted)">(best by position need)</span></div>';
+    urgent.forEach(function(u){
+      var p=u.best,esc=p.name.replace(/&/g,"&amp;");
+      h+='<div class="rec-card" data-rn="'+esc+'" style="border-color:var(--gold)">';
+      h+='<span class="rec-z '+zc(p.z_adj)+'">'+p.z_adj.toFixed(2)+'</span>';
+      h+='<div class="rec-name">'+p.name+'</div>';
+      h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+' &middot; Raw Z '+p.z_raw.toFixed(2)+'</div>';
+      h+='<div class="rec-why" style="color:var(--orange)">Best '+u.label+(u.count>1?" ("+u.count+" slots open)":"")+'</div></div>';
+    });
+    h+='</div>';
+  }
   h+='</div>';return h;
 }
 function buildTeamTab(){
