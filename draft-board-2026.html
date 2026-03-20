@@ -70,20 +70,20 @@
   /* MY TEAM TAB */
   .team-wrap{padding:12px 16px;overflow:auto;max-height:calc(100vh - 175px);}
   .team-panel-hdr{color:var(--accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
-  /* Scorecard strip */
-  .sc-strip{display:flex;gap:4px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
-  .sc-strip-col{flex:1;display:flex;flex-direction:column;gap:4px;}
-  .sc-strip-hdr{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:2px;}
-  .sc-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:5px 4px;text-align:center;}
-  .sc-card.strong{border-color:#3ddc84;background:#0a1f0a;}
-  .sc-card.mid{border-color:#f5c842;background:#1f1a0a;}
-  .sc-card.weak{border-color:#ff5c5c;background:#1f0a0a;}
+  /* Scorecard strip — compact pill row */
+  .sc-strip{display:flex;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;}
+  .sc-strip-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-right:2px;white-space:nowrap;}
+  .sc-divider{width:1px;background:var(--border);height:20px;margin:0 4px;flex-shrink:0;}
+  .sc-pill{display:flex;align-items:center;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;white-space:nowrap;}
+  .sc-pill.strong{border-color:#3ddc84;background:#0a1f0a;}
+  .sc-pill.mid{border-color:#f5c842;background:#1f1a0a;}
+  .sc-pill.weak{border-color:#ff5c5c;background:#1f0a0a;}
   .sc-cat{font-size:9px;color:var(--muted);text-transform:uppercase;}
-  .sc-val{font-size:13px;font-weight:800;}
+  .sc-val{font-size:11px;font-weight:800;margin-left:2px;}
   .sc-val.strong{color:#3ddc84;}.sc-val.mid{color:#f5c842;}.sc-val.weak{color:#ff5c5c;}
   /* Roster + recs row */
   .team-body{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;}
-  .roster-panel{flex:1;min-width:280px;}
+  .roster-panel{flex:1;min-width:260px;max-width:560px;}
   .roster-cols{display:flex;gap:12px;justify-content:center;}
   .roster-col{flex:1;min-width:130px;max-width:200px;}
   .roster-section-hdr{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;text-align:center;}
@@ -542,19 +542,25 @@ function getRecs(){
 }
 function buildScorecard(){
   var st=teamStats(),n=teamPlayers().length;
-  if(n===0)return '<div class="sc-strip"><div class="team-empty" style="width:100%;padding:8px">Add players to see stats</div></div>';
+  if(n===0)return '<div class="sc-strip"><span style="color:var(--muted);font-size:11px;">Add players to see category totals</span></div>';
   function gr(v,inv){return inv?(v>2?"strong":v>0?"mid":"weak"):(v>3?"strong":v>1?"mid":"weak");}
   var hcats=[{k:"z_r",l:"R",i:false},{k:"z_hr",l:"HR",i:false},{k:"z_rbi",l:"RBI",i:false},{k:"z_sb",l:"SB",i:false},{k:"z_obp",l:"OBP",i:false}];
   var pcats=[{k:"z_k",l:"K",i:false},{k:"z_qs",l:"QS",i:false},{k:"z_era",l:"ERA",i:true},{k:"z_whip",l:"WHIP",i:true},{k:"z_svhld",l:"SV+HLD",i:false}];
-  function col(cats,hdr){
-    var h='<div class="sc-strip-col"><div class="sc-strip-hdr">'+hdr+'</div>';
-    cats.forEach(function(c){
-      var v=st[c.k]||0,g=gr(v,c.i);
-      h+='<div class="sc-card '+g+'"><div class="sc-cat">'+c.l+'</div><div class="sc-val '+g+'">'+v.toFixed(1)+'</div></div>';
-    });
-    return h+'</div>';
-  }
-  return '<div class="sc-strip">'+col(hcats,"Offense")+col(pcats,"Pitching")+'</div>';
+  var h='<div class="sc-strip">';
+  h+='<span class="sc-strip-label">OFF</span>';
+  hcats.forEach(function(c){
+    var v=st[c.k]||0,g=gr(v,c.i);
+    h+='<div class="sc-pill '+g+'"><span class="sc-cat">'+c.l+'</span><span class="sc-val '+g+'">'+v.toFixed(1)+'</span></div>';
+  });
+  h+='<div class="sc-divider"></div>';
+  h+='<span class="sc-strip-label">PIT</span>';
+  pcats.forEach(function(c){
+    var v=st[c.k]||0,g=gr(v,c.i);
+    h+='<div class="sc-pill '+g+'"><span class="sc-cat">'+c.l+'</span><span class="sc-val '+g+'">'+v.toFixed(1)+'</span></div>';
+  });
+  h+='<span style="color:var(--muted);font-size:9px;margin-left:auto;">'+n+'/27</span>';
+  h+='</div>';
+  return h;
 }
 function buildRecs(){
   var recs=getRecs();
