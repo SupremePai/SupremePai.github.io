@@ -68,40 +68,45 @@
   #rb{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:12px;}
   .ri{font-size:10px;}
   /* MY TEAM TAB */
-  .team-wrap{padding:16px 20px;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;overflow:auto;max-height:calc(100vh - 175px);}
-  .team-panel-hdr{color:var(--accent);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
-  .roster-panel{flex:0 0 320px;}
-  .roster-section-hdr{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;border-top:1px solid var(--border);padding-top:8px;}
-  .slot-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-  .slot-label{width:34px;font-size:10px;font-weight:700;color:var(--muted);text-align:right;flex-shrink:0;}
+  .team-wrap{padding:12px 16px;overflow:auto;max-height:calc(100vh - 175px);}
+  .team-panel-hdr{color:var(--accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+  /* Scorecard strip */
+  .sc-strip{display:flex;gap:4px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+  .sc-strip-col{flex:1;display:flex;flex-direction:column;gap:4px;}
+  .sc-strip-hdr{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:2px;}
+  .sc-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:5px 4px;text-align:center;}
+  .sc-card.strong{border-color:#3ddc84;background:#0a1f0a;}
+  .sc-card.mid{border-color:#f5c842;background:#1f1a0a;}
+  .sc-card.weak{border-color:#ff5c5c;background:#1f0a0a;}
+  .sc-cat{font-size:9px;color:var(--muted);text-transform:uppercase;}
+  .sc-val{font-size:13px;font-weight:800;}
+  .sc-val.strong{color:#3ddc84;}.sc-val.mid{color:#f5c842;}.sc-val.weak{color:#ff5c5c;}
+  /* Roster + recs row */
+  .team-body{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;}
+  .roster-panel{flex:1;min-width:280px;}
+  .roster-cols{display:flex;gap:12px;justify-content:center;}
+  .roster-col{flex:1;min-width:130px;max-width:200px;}
+  .roster-section-hdr{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;text-align:center;}
+  .roster-bench{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+  .slot-row{display:flex;align-items:center;gap:4px;margin-bottom:3px;}
+  .slot-label{width:30px;font-size:10px;font-weight:700;color:var(--muted);text-align:right;flex-shrink:0;}
   .slot-wrap{position:relative;flex:1;}
-  .slot-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:12px;outline:none;}
+  .slot-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-size:11px;outline:none;}
   .slot-inp:focus{border-color:var(--accent);}
   .slot-inp.filled{border-color:#2a5a2a;background:#0f2a0f;color:var(--green);}
-  .slot-clr{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0 3px;flex-shrink:0;line-height:1;}
+  .slot-clr{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 2px;flex-shrink:0;line-height:1;}
   .slot-clr:hover{color:var(--red);}
   .ac-list{position:absolute;top:100%;left:0;right:0;background:#1c2035;border:1px solid var(--accent);border-top:none;border-radius:0 0 4px 4px;z-index:200;max-height:150px;overflow-y:auto;display:none;}
   .ac-item{padding:5px 8px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
   .ac-item:hover,.ac-item.sel{background:var(--surface2);color:var(--accent);}
   .ac-pos{font-size:10px;color:var(--muted);margin:0 6px;}
   .ac-z{font-size:10px;color:var(--green);}
-  .scorecard-panel{flex:1;min-width:260px;}
-  .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-  .sc-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;}
-  .sc-card.strong{border-color:#3ddc84;background:#0a1f0a;}
-  .sc-card.mid{border-color:#f5c842;background:#1f1a0a;}
-  .sc-card.weak{border-color:#ff5c5c;background:#1f0a0a;}
-  .sc-cat{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
-  .sc-val{font-size:17px;font-weight:800;}
-  .sc-val.strong{color:#3ddc84;}.sc-val.mid{color:#f5c842;}.sc-val.weak{color:#ff5c5c;}
-  .sc-sub{font-size:9px;color:var(--muted);margin-top:1px;}
-  .recs-panel{flex:0 0 270px;}
-  .rec-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;cursor:pointer;}
+  .recs-panel{flex:0 0 250px;}
+  .rec-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px;margin-bottom:6px;cursor:pointer;}
   .rec-card:hover{border-color:var(--accent);}
-  .rec-name{font-weight:700;font-size:13px;margin-bottom:2px;}
+  .rec-name{font-weight:700;font-size:12px;margin-bottom:2px;}
   .rec-meta{font-size:10px;color:var(--muted);}
-  .rec-why{font-size:10px;color:var(--gold);margin-top:3px;}
-  .rec-z{font-size:12px;font-weight:700;float:right;}
+  .rec-why{font-size:10px;color:var(--gold);margin-top:2px;}
   .team-empty{color:var(--muted);font-size:12px;padding:16px;text-align:center;}
   ::-webkit-scrollbar{width:6px;height:6px;}
   ::-webkit-scrollbar-track{background:var(--surface);}
@@ -438,7 +443,7 @@ function teamStats(){
   return st;
 }
 // Positional urgency: slot depth scores (lower = scarcer)
-var SLOT_DEPTH={C:2,SS:2,"2B":3,"3B":3,"1B":3,LF:4,CF:4,RF:4,SP:4,RP:3,OF:5,UTIL:6,CI:5,MI:5,P:5,BN:8};
+var SLOT_DEPTH={C:2,SS:2,"2B":3,"3B":3,"1B":3,LF:4,CF:4,RF:4,SP:4,RP:3,OF:5,UTIL:20,CI:5,MI:5,P:5,BN:99};
 // Urgency weight scale: moderate influence
 var URGENCY_SCALE=0.6;
 
@@ -497,9 +502,9 @@ function getUrgentNeeds(){
   // Sort by urgency score
   var sorted=Object.keys(posGroups).map(function(k){return posGroups[k];});
   sorted.sort(function(a,b){return b.urgScore-a.urgScore;});
-  var top2=sorted.slice(0,2);
+  var top4=sorted.slice(0,4);
   // For each, find best available player
-  return top2.map(function(pg){
+  return top4.map(function(pg){
     var avail=players.filter(function(p){
       if(drafted.has(p.name)||tn[p.name])return false;
       var pp=p.elig.toUpperCase().split("/");
@@ -533,19 +538,23 @@ function getRecs(){
     cats.forEach(function(c){if(wk[c]&&(p[c]||0)>0.3)reasons.push(clab[c]);});
     p._rw=reasons.length>0?"Fills: "+reasons.join(", "):"Best available";
   });
-  return avail.sort(function(a,b){return b._rs-a._rs;}).slice(0,3);
+  return avail.sort(function(a,b){return b._rs-a._rs;}).slice(0,6);
 }
 function buildScorecard(){
   var st=teamStats(),n=teamPlayers().length;
-  if(n===0)return '<div class="scorecard-panel"><div class="team-panel-hdr">Category Scorecard</div><div class="team-empty">Add players to see stats</div></div>';
+  if(n===0)return '<div class="sc-strip"><div class="team-empty" style="width:100%;padding:8px">Add players to see stats</div></div>';
   function gr(v,inv){return inv?(v>2?"strong":v>0?"mid":"weak"):(v>3?"strong":v>1?"mid":"weak");}
-  var cats=[{k:"z_hr",l:"HR",i:false},{k:"z_r",l:"R",i:false},{k:"z_rbi",l:"RBI",i:false},{k:"z_sb",l:"SB",i:false},{k:"z_obp",l:"OBP",i:false},{k:"z_k",l:"K",i:false},{k:"z_era",l:"ERA",i:true},{k:"z_whip",l:"WHIP",i:true},{k:"z_qs",l:"QS",i:false},{k:"z_svhld",l:"SV+HLD",i:false}];
-  var h='<div class="scorecard-panel"><div class="team-panel-hdr">Scorecard <span style="font-size:10px;font-weight:400;color:var(--muted)">('+n+'/27 slots)</span></div><div class="sc-grid">';
-  cats.forEach(function(c){
-    var v=st[c.k]||0,g=gr(v,c.i);
-    h+='<div class="sc-card '+g+'"><div class="sc-cat">'+c.l+'</div><div class="sc-val '+g+'">'+v.toFixed(1)+'</div><div class="sc-sub">'+(v>=0?"+":"")+v.toFixed(2)+' z</div></div>';
-  });
-  h+='</div></div>';return h;
+  var hcats=[{k:"z_r",l:"R",i:false},{k:"z_hr",l:"HR",i:false},{k:"z_rbi",l:"RBI",i:false},{k:"z_sb",l:"SB",i:false},{k:"z_obp",l:"OBP",i:false}];
+  var pcats=[{k:"z_k",l:"K",i:false},{k:"z_qs",l:"QS",i:false},{k:"z_era",l:"ERA",i:true},{k:"z_whip",l:"WHIP",i:true},{k:"z_svhld",l:"SV+HLD",i:false}];
+  function col(cats,hdr){
+    var h='<div class="sc-strip-col"><div class="sc-strip-hdr">'+hdr+'</div>';
+    cats.forEach(function(c){
+      var v=st[c.k]||0,g=gr(v,c.i);
+      h+='<div class="sc-card '+g+'"><div class="sc-cat">'+c.l+'</div><div class="sc-val '+g+'">'+v.toFixed(1)+'</div></div>';
+    });
+    return h+'</div>';
+  }
+  return '<div class="sc-strip">'+col(hcats,"Offense")+col(pcats,"Pitching")+'</div>';
 }
 function buildRecs(){
   var recs=getRecs();
@@ -580,30 +589,54 @@ function buildRecs(){
   h+='</div>';return h;
 }
 function buildTeamTab(){
-  var secs=[
-    {l:"Hitting", ids:["C","1B","2B","3B","SS","CI","MI","LF","CF","RF","OF","UTIL"]},
-    {l:"Pitching",ids:["SP1","SP2","SP3","SP4","SP5","RP1","RP2","RP3","P1","P2","P3"]},
-    {l:"Bench",   ids:["BN1","BN2","BN3","BN4"]}
-  ];
-  var h='<div class="roster-panel"><div class="team-panel-hdr">Roster</div>';
-  secs.forEach(function(sec){
-    h+='<div class="roster-section-hdr">'+sec.l+'</div>';
-    sec.ids.forEach(function(sid){
-      var slot=ROSTER_SLOTS.filter(function(s){return s.id===sid;})[0];
-      var p=myTeam[sid],pn=p?p.name:"",fi=p?" filled":"";
-      var pnesc=pn.replace(/"/g,"&quot;");
-      h+='<div class="slot-row" id="row_'+sid+'">';
-      h+='<div class="slot-label">'+slot.label+'</div>';
-      h+='<div class="slot-wrap">';
-      h+='<input class="slot-inp'+fi+'" id="inp_'+sid+'" data-sid="'+sid+'" type="text" placeholder="Search..." value="'+pnesc+'" autocomplete="off">';
-      h+='<div class="ac-list" id="ac_'+sid+'"></div>';
-      h+='</div>';
-      h+=(p?'<button class="slot-clr" data-sid="'+sid+'">x</button>':'<span style="width:18px"></span>');
-      h+='</div>';
-    });
+  function slotHtml(sid){
+    var slot=ROSTER_SLOTS.filter(function(s){return s.id===sid;})[0];
+    var p=myTeam[sid],pn=p?p.name:"",fi=p?" filled":"";
+    var pnesc=pn.replace(/"/g,"&quot;");
+    var h='<div class="slot-row" id="row_'+sid+'">';
+    h+='<div class="slot-label">'+slot.label+'</div>';
+    h+='<div class="slot-wrap">';
+    h+='<input class="slot-inp'+fi+'" id="inp_'+sid+'" data-sid="'+sid+'" type="text" placeholder="Search..." value="'+pnesc+'" autocomplete="off">';
+    h+='<div class="ac-list" id="ac_'+sid+'"></div>';
+    h+='</div>';
+    h+=(p?'<button class="slot-clr" data-sid="'+sid+'">x</button>':'<span style="width:18px"></span>');
+    h+='</div>';
+    return h;
+  }
+  // Two-column centered layout: Hitting left, Pitching right, Bench below
+  var hitIds=["C","1B","2B","3B","SS","CI","MI","LF","CF","RF","OF","UTIL"];
+  var pitIds=["SP1","SP2","SP3","SP4","SP5","RP1","RP2","RP3","P1","P2","P3"];
+  var bnIds=["BN1","BN2","BN3","BN4"];
+  var h='<div class="roster-panel">';
+  h+='<div class="team-panel-hdr" style="text-align:center">Roster</div>';
+  h+='<div class="roster-cols">';
+  // Hitting column
+  h+='<div class="roster-col"><div class="roster-section-hdr">Hitting</div>';
+  hitIds.forEach(function(sid){h+=slotHtml(sid);});
+  h+='</div>';
+  // Pitching column
+  h+='<div class="roster-col"><div class="roster-section-hdr">Pitching</div>';
+  pitIds.forEach(function(sid){h+=slotHtml(sid);});
+  h+='</div>';
+  h+='</div>';
+  // Bench row centered below
+  h+='<div class="roster-bench">';
+  bnIds.forEach(function(sid){
+    var slot=ROSTER_SLOTS.filter(function(s){return s.id===sid;})[0];
+    var p=myTeam[sid],pn=p?p.name:"",fi=p?" filled":"";
+    var pnesc=pn.replace(/"/g,"&quot;");
+    h+='<div style="display:flex;align-items:center;gap:3px;min-width:180px;">';
+    h+='<div class="slot-label">BN</div>';
+    h+='<div class="slot-wrap">';
+    h+='<input class="slot-inp'+fi+'" id="inp_'+sid+'" data-sid="'+sid+'" type="text" placeholder="Search..." value="'+pnesc+'" autocomplete="off">';
+    h+='<div class="ac-list" id="ac_'+sid+'"></div>';
+    h+='</div>';
+    h+=(p?'<button class="slot-clr" data-sid="'+sid+'">x</button>':'<span style="width:18px"></span>');
+    h+='</div>';
   });
   h+='</div>';
-  return '<div class="team-wrap">'+h+buildScorecard()+buildRecs()+'</div>';
+  h+='</div>';
+  return '<div class="team-wrap">'+buildScorecard()+'<div class="team-body">'+h+buildRecs()+'</div></div>';
 }
 function refreshTeamPanels(){
   var wrap=document.getElementById("tcont_Team");if(!wrap)return;
