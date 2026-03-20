@@ -181,7 +181,7 @@ return v;
 }
 function espnCell(espn){
 if(espn>0)return`<td class="espn-cell" data-espn="${espn}">${espn}</td>`;
-return`<td class="espn-unranked" data-espn="9999">–</td>`;
+return`<td class="espn-unranked" data-espn="9999">--</td>`;
 }
 
 function getColDefs(tab){
@@ -209,15 +209,15 @@ else if(c.key===“primary”){row+=`<td>${posBadge(p.primary)}</td>`;}
 else if(c.key===“elig”){row+=`<td class="elig-cell left">${p.elig}</td>`;}
 else if(c.key===“espn”){row+=espnCell(p.espn);}
 else if(c.key===”_draft”){row+=`<td><button class="draft-btn" onclick="toggleDraft(this)">${isDrafted?"↩ Undo":"✕ Draft"}</button></td>`;}
-else if(c.key===“repl_z”){row+=`<td style="color:var(--muted);font-size:11px;">${typeof p.repl_z==="number"?p.repl_z.toFixed(2):"–"}</td>`;}
+else if(c.key===“repl_z”){row+=`<td style="color:var(--muted);font-size:11px;">${typeof p.repl_z==="number"?p.repl_z.toFixed(2):"--"}</td>`;}
 else if(c.isZ){
-if(isBoard&&c.isH&&!isHitter){row+=`<td style="color:var(--border)">–</td>`;return;}
-if(isBoard&&c.isP&&isHitter){row+=`<td style="color:var(--border)">–</td>`;return;}
+if(isBoard&&c.isH&&!isHitter){row+=`<td style="color:var(--border)">--</td>`;return;}
+if(isBoard&&c.isP&&isHitter){row+=`<td style="color:var(--border)">--</td>`;return;}
 const v=p[c.key];
-row+=`<td class="${c.isAdj?"z-adj-cell ":""}${zClass(v)}">${typeof v==="number"?v.toFixed(2):"–"}</td>`;
+row+=`<td class="${c.isAdj?"z-adj-cell ":""}${zClass(v)}">${typeof v==="number"?v.toFixed(2):"--"}</td>`;
 }else{
-if(isBoard&&c.isH&&!isHitter){row+=`<td style="color:var(--border)">–</td>`;return;}
-if(isBoard&&c.isP&&isHitter){row+=`<td style="color:var(--border)">–</td>`;return;}
+if(isBoard&&c.isH&&!isHitter){row+=`<td style="color:var(--border)">--</td>`;return;}
+if(isBoard&&c.isP&&isHitter){row+=`<td style="color:var(--border)">--</td>`;return;}
 row+=`<td>${fmtVal(p[c.key],c.key)}</td>`;
 }
 });
