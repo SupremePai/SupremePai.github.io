@@ -101,12 +101,14 @@
   .ac-item:hover,.ac-item.sel{background:var(--surface2);color:var(--accent);}
   .ac-pos{font-size:10px;color:var(--muted);margin:0 6px;}
   .ac-z{font-size:10px;color:var(--green);}
-  .recs-panel{flex:0 0 250px;}
-  .rec-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px;margin-bottom:6px;cursor:pointer;}
+  .recs-panel{flex:1;min-width:300px;}
+  .recs-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px;}
+  .recs-grid-single{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .rec-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:7px;cursor:pointer;text-align:right;}
   .rec-card:hover{border-color:var(--accent);}
-  .rec-name{font-weight:700;font-size:12px;margin-bottom:2px;}
-  .rec-meta{font-size:10px;color:var(--muted);}
-  .rec-why{font-size:10px;color:var(--gold);margin-top:2px;}
+  .rec-name{font-weight:700;font-size:11px;margin-bottom:2px;}
+  .rec-meta{font-size:9px;color:var(--muted);}
+  .rec-why{font-size:9px;color:var(--gold);margin-top:2px;}
   .team-empty{color:var(--muted);font-size:12px;padding:16px;text-align:center;}
   ::-webkit-scrollbar{width:6px;height:6px;}
   ::-webkit-scrollbar-track{background:var(--surface);}
@@ -409,6 +411,12 @@ var ROSTER_SLOTS=[
   {id:"BN4",  label:"BN",   elig:["C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"], bench:true}
 ];
 var BW=0.60;
+var BENCH={
+  z_hr:{avg:10.19,topQ:11.56},z_r:{avg:11.35,topQ:13.87},z_rbi:{avg:11.10,topQ:12.68},
+  z_sb:{avg:8.23,topQ:10.53},z_obp:{avg:6.60,topQ:9.45},z_k:{avg:9.59,topQ:10.49},
+  z_era:{avg:8.67,topQ:10.94},z_whip:{avg:10.52,topQ:14.13},z_qs:{avg:7.09,topQ:8.33},
+  z_svhld:{avg:6.26,topQ:7.66}
+};
 var CW={z_hr:1.075,z_r:1.0,z_rbi:1.0,z_sb:1.0,z_obp:1.075,z_k:1.10,z_era:1.0,z_whip:1.0,z_qs:1.0,z_svhld:1.0};
 var HCAT=["z_hr","z_r","z_rbi","z_sb","z_obp"];
 var PCAT=["z_k","z_era","z_whip","z_qs","z_svhld"];
@@ -542,23 +550,50 @@ function getRecs(){
 }
 function buildScorecard(){
   var st=teamStats(),n=teamPlayers().length;
-  if(n===0)return '<div class="sc-strip"><span style="color:var(--muted);font-size:11px;">Add players to see category totals</span></div>';
-  function gr(v,inv){return inv?(v>2?"strong":v>0?"mid":"weak"):(v>3?"strong":v>1?"mid":"weak");}
-  var hcats=[{k:"z_r",l:"R",i:false},{k:"z_hr",l:"HR",i:false},{k:"z_rbi",l:"RBI",i:false},{k:"z_sb",l:"SB",i:false},{k:"z_obp",l:"OBP",i:false}];
-  var pcats=[{k:"z_k",l:"K",i:false},{k:"z_qs",l:"QS",i:false},{k:"z_era",l:"ERA",i:true},{k:"z_whip",l:"WHIP",i:true},{k:"z_svhld",l:"SV+HLD",i:false}];
-  var h='<div class="sc-strip">';
-  h+='<span class="sc-strip-label">OFF</span>';
-  hcats.forEach(function(c){
-    var v=st[c.k]||0,g=gr(v,c.i);
-    h+='<div class="sc-pill '+g+'"><span class="sc-cat">'+c.l+'</span><span class="sc-val '+g+'">'+v.toFixed(1)+'</span></div>';
-  });
-  h+='<div class="sc-divider"></div>';
-  h+='<span class="sc-strip-label">PIT</span>';
-  pcats.forEach(function(c){
-    var v=st[c.k]||0,g=gr(v,c.i);
-    h+='<div class="sc-pill '+g+'"><span class="sc-cat">'+c.l+'</span><span class="sc-val '+g+'">'+v.toFixed(1)+'</span></div>';
-  });
-  h+='<span style="color:var(--muted);font-size:9px;margin-left:auto;">'+n+'/27</span>';
+  if(n===0)return '<div class="sc-strip"><span style="color:var(--muted);font-size:11px;padding:8px;">Add players to see stats</span></div>';
+  var nonBench=ROSTER_SLOTS.filter(function(s){return !s.bench;}).length;
+  var prog=Math.min(n/nonBench,1.0);
+  var hcats=[{k:"z_r",l:"R"},{k:"z_hr",l:"HR"},{k:"z_rbi",l:"RBI"},{k:"z_sb",l:"SB"},{k:"z_obp",l:"OBP"}];
+  var pcats=[{k:"z_k",l:"K"},{k:"z_qs",l:"QS"},{k:"z_era",l:"ERA"},{k:"z_whip",l:"WHIP"},{k:"z_svhld",l:"SV+HLD"}];
+  function pill(c){
+    var v=st[c.k]||0;
+    var bm=BENCH[c.k];
+    var scaledAvg=bm.avg*prog;
+    var scaledTopQ=bm.topQ*prog;
+    var g=v>=scaledTopQ?"strong":v>=scaledAvg?"mid":"weak";
+    var barFill=scaledTopQ>0?Math.min(v/(scaledTopQ*1.1)*100,100):0;
+    var barCol=g==="strong"?"#3ddc84":g==="mid"?"#f5c842":"#ff5c5c";
+    var h='<div class="sc-card '+g+'">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:baseline;">';
+    h+='<span class="sc-cat">'+c.l+'</span><span class="sc-val '+g+'">'+v.toFixed(1)+'</span>';
+    h+='</div>';
+    h+='<div style="position:relative;height:4px;background:var(--border);border-radius:2px;margin-top:3px;">';
+    h+='<div style="position:absolute;left:0;top:0;height:100%;width:'+barFill.toFixed(0)+'%;background:'+barCol+';border-radius:2px;"></div>';
+    if(prog>0.1&&scaledTopQ>0){
+      var avgMark=Math.min(scaledAvg/(scaledTopQ*1.1)*100,95);
+      h+='<div style="position:absolute;top:-1px;left:'+avgMark.toFixed(0)+'%;width:2px;height:6px;background:var(--muted);border-radius:1px;"></div>';
+      h+='<div style="position:absolute;top:-1px;left:90%;width:2px;height:6px;background:#3ddc84;border-radius:1px;"></div>';
+    }
+    h+='</div></div>';
+    return h;
+  }
+  function col(cats,lbl){
+    var h='<div class="sc-strip-col"><div class="sc-strip-hdr">'+lbl;
+    if(prog>0.05)h+=' <span style="font-size:8px;color:var(--muted)"> gray=avg green=top25%</span>';
+    h+='</div>';
+    cats.forEach(function(c){h+=pill(c);});
+    return h+'</div>';
+  }
+  return '<div class="sc-strip">'+col(hcats,"Offense")+col(pcats,"Pitching")+'</div>';
+}
+function recCard(p,why,whyColor,borderColor){
+  var esc=p.name.replace(/&/g,"&amp;");
+  var bc=borderColor?'style="border-color:'+borderColor+'"':'';
+  var h='<div class="rec-card" data-rn="'+esc+'" '+bc+'>';
+  h+='<div class="rec-z '+zc(p.z_adj)+'" style="font-size:11px;font-weight:800;">'+p.z_adj.toFixed(2)+'</div>';
+  h+='<div class="rec-name">'+p.name+'</div>';
+  h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+'</div>';
+  h+='<div class="rec-why" style="color:'+whyColor+'">'+why+'</div>';
   h+='</div>';
   return h;
 }
@@ -567,30 +602,22 @@ function buildRecs(){
   var urgent=getUrgentNeeds();
   var filled=teamPlayers().length;
   var h='<div class="recs-panel">';
-  // Section 1: Top 3 value
-  h+='<div class="team-panel-hdr">Best Available <span style="font-size:10px;font-weight:400;color:var(--muted)">(value + positional need)</span></div>';
-  if(!recs.length){h+='<div class="team-empty">No recommendations</div>';}
-  else{recs.forEach(function(p){
-    var esc=p.name.replace(/&/g,"&amp;");
-    h+='<div class="rec-card" data-rn="'+esc+'">';
-    h+='<span class="rec-z '+zc(p.z_adj)+'">'+p.z_adj.toFixed(2)+'</span>';
-    h+='<div class="rec-name">'+p.name+'</div>';
-    h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+' &middot; Raw Z '+p.z_raw.toFixed(2)+'</div>';
-    h+='<div class="rec-why">'+p._rw+'</div></div>';
-  });}
-  // Section 2: Urgent positional needs
-  if(urgent.length>0&&filled>0){
-    h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">';
-    h+='<div class="team-panel-hdr">Fill a Slot <span style="font-size:10px;font-weight:400;color:var(--muted)">(best by position need)</span></div>';
-    urgent.forEach(function(u){
-      var p=u.best,esc=p.name.replace(/&/g,"&amp;");
-      h+='<div class="rec-card" data-rn="'+esc+'" style="border-color:var(--gold)">';
-      h+='<span class="rec-z '+zc(p.z_adj)+'">'+p.z_adj.toFixed(2)+'</span>';
-      h+='<div class="rec-name">'+p.name+'</div>';
-      h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+' &middot; Raw Z '+p.z_raw.toFixed(2)+'</div>';
-      h+='<div class="rec-why" style="color:var(--orange)">Best '+u.label+(u.count>1?" ("+u.count+" slots open)":"")+'</div></div>';
-    });
+  h+='<div class="team-panel-hdr" style="text-align:right">Best Available <span style="font-size:10px;font-weight:400;color:var(--muted)">(value + need)</span></div>';
+  if(!recs.length){h+='<div class="team-empty">Draft players to see recommendations</div>';}
+  else{
+    h+='<div class="recs-grid">';
+    recs.forEach(function(p){h+=recCard(p,p._rw,"var(--gold)","");});
     h+='</div>';
+  }
+  if(urgent.length>0&&filled>0){
+    h+='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">';
+    h+='<div class="team-panel-hdr" style="text-align:right">Fill a Slot <span style="font-size:10px;font-weight:400;color:var(--muted)">(positional urgency)</span></div>';
+    h+='<div class="recs-grid-single">';
+    urgent.forEach(function(u){
+      var why="Best "+u.label+(u.count>1?" ("+u.count+" open)":"");
+      h+=recCard(u.best,why,"var(--orange)","var(--gold)");
+    });
+    h+='</div></div>';
   }
   h+='</div>';return h;
 }
