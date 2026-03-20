@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -68,6 +67,42 @@
   tr.drafted .db:hover{background:var(--green);border-color:var(--green);color:#000;}
   #rb{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-left:12px;}
   .ri{font-size:10px;}
+  /* MY TEAM TAB */
+  .team-wrap{padding:16px 20px;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;overflow:auto;max-height:calc(100vh - 175px);}
+  .team-panel-hdr{color:var(--accent);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+  .roster-panel{flex:0 0 320px;}
+  .roster-section-hdr{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px;border-top:1px solid var(--border);padding-top:8px;}
+  .slot-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+  .slot-label{width:34px;font-size:10px;font-weight:700;color:var(--muted);text-align:right;flex-shrink:0;}
+  .slot-wrap{position:relative;flex:1;}
+  .slot-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:12px;outline:none;}
+  .slot-inp:focus{border-color:var(--accent);}
+  .slot-inp.filled{border-color:#2a5a2a;background:#0f2a0f;color:var(--green);}
+  .slot-clr{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0 3px;flex-shrink:0;line-height:1;}
+  .slot-clr:hover{color:var(--red);}
+  .ac-list{position:absolute;top:100%;left:0;right:0;background:#1c2035;border:1px solid var(--accent);border-top:none;border-radius:0 0 4px 4px;z-index:200;max-height:150px;overflow-y:auto;display:none;}
+  .ac-item{padding:5px 8px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .ac-item:hover,.ac-item.sel{background:var(--surface2);color:var(--accent);}
+  .ac-pos{font-size:10px;color:var(--muted);margin:0 6px;}
+  .ac-z{font-size:10px;color:var(--green);}
+  .scorecard-panel{flex:1;min-width:260px;}
+  .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+  .sc-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;}
+  .sc-card.strong{border-color:#3ddc84;background:#0a1f0a;}
+  .sc-card.mid{border-color:#f5c842;background:#1f1a0a;}
+  .sc-card.weak{border-color:#ff5c5c;background:#1f0a0a;}
+  .sc-cat{font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+  .sc-val{font-size:17px;font-weight:800;}
+  .sc-val.strong{color:#3ddc84;}.sc-val.mid{color:#f5c842;}.sc-val.weak{color:#ff5c5c;}
+  .sc-sub{font-size:9px;color:var(--muted);margin-top:1px;}
+  .recs-panel{flex:0 0 270px;}
+  .rec-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;cursor:pointer;}
+  .rec-card:hover{border-color:var(--accent);}
+  .rec-name{font-weight:700;font-size:13px;margin-bottom:2px;}
+  .rec-meta{font-size:10px;color:var(--muted);}
+  .rec-why{font-size:10px;color:var(--gold);margin-top:3px;}
+  .rec-z{font-size:12px;font-weight:700;float:right;}
+  .team-empty{color:var(--muted);font-size:12px;padding:16px;text-align:center;}
   ::-webkit-scrollbar{width:6px;height:6px;}
   ::-webkit-scrollbar-track{background:var(--surface);}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -99,18 +134,18 @@
 <script type="application/json" id="jd5">": "RP", "espn": 0, "k": 131, "era": 4.02, "whip": 1.3, "qs": 9, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.7, "z_era": -0.13, "z_whip": -0.14, "z_qs": 0.48, "z_svhld": 0.0, "z_raw": 0.91, "z_adj": -0.59, "repl_z": 1.5, "type": "P", "rank_RP": 62}, {"rank": 133, "name": "Emilio Pag\u00e1n", "team": "CIN", "elig": "RP", "primary": "RP", "espn": 115, "k": 73, "era": 4.14, "whip": 1.24, "qs": 0, "sv": 27, "hld": 4, "svhld": 31, "z_k": -0.52, "z_era": -0.38, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 2.24, "z_raw": 0.9, "z_adj": -0.6, "repl_z": 1.5, "type": "P", "rank_RP": 63}, {"rank": 134, "name": "Steven Matz", "team": "TBR", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 116, "era": 4.06, "whip": 1.28, "qs": 10, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.38, "z_era": -0.22, "z_whip": 0.09, "z_qs": 0.64, "z_svhld": 0.0, "z_raw": 0.89, "z_adj": -0.61, "repl_z": 1.5, "type": "P", "rank_RP": 64}, {"rank": 135, "name": "Dustin May", "team": "STL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 148, "era": 4.22, "whip": 1.34, "qs": 12, "sv": 0, "hld": 1, "svhld": 1, "z_k": 1.06, "z_era": -0.55, "z_whip": -0.6, "z_qs": 0.97, "z_svhld": 0.0, "z_raw": 0.88, "z_adj": -0.62, "repl_z": 1.5, "type": "P", "rank_RP": 65}, {"rank": 137, "name": "Ian Seymour", "team": "TBR", "elig": "RP/SP", "primary": "RP", "espn": 0, "k": 111, "era": 4.02, "whip": 1.24, "qs": 7, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.28, "z_era": -0.13, "z_whip": 0.55, "z_qs": 0.15, "z_svhld": 0.0, "z_raw": 0.85, "z_adj": -0.65, "repl_z": 1.5, "type": "P", "rank_RP": 66}, {"rank": 139, "name": "Jared Koenig", "team": "MIL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 68, "era": 3.49, "whip": 1.24, "qs": 0, "sv": 1, "hld": 15, "svhld": 16, "z_k": -0.62, "z_era": 0.98, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": 0.81, "z_adj": -0.69, "repl_z": 1.5, "type": "P", "rank_RP": 67}, {"rank": 140, "name": "Zach Eflin", "team": "BAL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 115, "era": 4.31, "whip": 1.26, "qs": 11, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.36, "z_era": -0.74, "z_whip": 0.32, "z_qs": 0.81, "z_svhld": 0.0, "z_raw": 0.75, "z_adj": -0.75, "repl_z": 1.5, "type": "P", "rank_RP": 68}, {"rank": 141, "name": "F\u00e9lix Bautista", "team": "BAL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 16, "era": 3.04, "whip": 1.16, "qs": 0, "sv": 0, "hld": 1, "svhld": 1, "z_k": -1.72, "z_era": 1.92, "z_whip": 1.48, "z_qs": -0.99, "z_svhld": 0.0, "z_raw": 0.69, "z_adj": -0.81, "repl_z": 1.5, "type": "P", "rank_RP": 69}, {"rank": 142, "name": "Bryan Baker", "team": "TBR", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 71, "era": 3.65, "whip": 1.22, "qs": 0, "sv": 3, "hld": 12, "svhld": 15, "z_k": -0.56, "z_era": 0.64, "z_whip": 0.78, "z_qs": -0.99, "z_svhld": 0.8, "z_raw": 0.67, "z_adj": -0.83, "repl_z": 1.5, "type": "P", "rank_RP": 70}, {"rank": 143, "name": "Ryne Nelson", "team": "ARI", "elig": "SP/RP", "primary": "RP", "espn": 276, "k": 136, "era": 4.31, "whip": 1.32, "qs": 12, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.8, "z_era": -0.74, "z_whip": -0.37, "z_qs": 0.97, "z_svhld": 0.0, "z_raw": 0.66, "z_adj": -0.84, "repl_z": 1.5, "type": "P", "rank_RP": 71}, {"rank": 145, "name": "Jason Adam", "team": "SDP", "elig": "SP/RP", "primary": "RP", "espn": 120, "k": 66, "era": 3.65, "whip": 1.22, "qs": 0, "sv": 1, "hld": 15, "svhld": 16, "z_k": -0.67, "z_era": 0.64, "z_whip": 0.78, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": 0.65, "z_adj": -0.85, "repl_z": 1.5, "type": "P", "rank_RP": 72}, {"rank": 148, "name": "Orion Kerkering", "team": "PHI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 68, "era": 3.51, "whip": 1.24, "qs": 0, "sv": 1, "hld": 13, "svhld": 14, "z_k": -0.62, "z_era": 0.93, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.71, "z_raw": 0.58, "z_adj": -0.92, "repl_z": 1.5, "type": "P", "rank_RP": 73}, {"rank": 150, "name": "Parker Messick", "team": "CLE", "elig": "SP/RP", "primary": "RP", "espn": 258, "k": 115, "era": 4.08, "whip": 1.32, "qs": 11, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.36, "z_era": -0.26, "z_whip": -0.37, "z_qs": 0.81, "z_svhld": 0.0, "z_raw": 0.54, "z_adj": -0.96, "repl_z": 1.5, "type": "P", "rank_RP": 74}, {"rank": 152, "name": "Camilo Doval", "team": "NYY", "elig": "SP/RP", "primary": "RP", "espn": 287, "k": 74, "era": 3.41, "whip": 1.29, "qs": 0, "sv": 2, "hld": 14, "svhld": 16, "z_k": -0.5, "z_era": 1.14, "z_whip": -0.03, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": 0.51, "z_adj": -0.99, "repl_z": 1.5, "type": "P", "rank_RP": 75}, {"rank": 153, "name": "Bryan King", "team": "HOU", "elig": "SP/RP", "primary": "RP", "espn": 289, "k": 67, "era": 3.72, "whip": 1.24, "qs": 0, "sv": 1, "hld": 17, "svhld": 18, "z_k": -0.65, "z_era": 0.49, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 1.07, "z_raw": 0.47, "z_adj": -1.03, "repl_z": 1.5, "type": "P", "rank_RP": 76}, {"rank": 154, "name": "Braxton Ashcraft", "team": "PIT", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 124, "era": 4.08, "whip": 1.33, "qs": 10, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.55, "z_era": -0.26, "z_whip": -0.49, "z_qs": 0.64, "z_svhld": 0.0, "z_raw": 0.44, "z_adj": -1.06, "repl_z": 1.5, "type": "P", "rank_RP": 77}, {"rank": 155, "name": "Caleb Thielbar", "team": "CHC", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 69, "era": 3.68, "whip": 1.24, "qs": 0, "sv": 1, "hld": 15, "svhld": 16, "z_k": -0.6, "z_era": 0.58, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": 0.43, "z_adj": -1.07, "repl_z": 1.5, "type": "P", "rank_RP": 78}, {"rank": 156, "name": "Eduard Bazardo", "team": "SEA", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 70, "era": 3.71, "whip": 1.23, "qs": 0, "sv": 1, "hld": 14, "svhld": 15, "z_k": -0.58, "z_era": 0.52, "z_whip": 0.67, "z_qs": -0.99, "z_svhld": 0.8, "z_raw": 0.42, "z_adj": -1.08, "repl_z": 1.5, "type": "P", "rank_RP": 79}, {"rank": 157, "name": "Riley O'Brien", "team": "STL", "elig": "SP/RP", "primary": "RP", "espn": 279, "k": 64, "era": 3.54, "whip": 1.32, "qs": 0, "sv": 13, "hld": 11, "svhld": 24, "z_k": -0.71, "z_era": 0.87, "z_whip": -0.37, "z_qs": -0.99, "z_svhld": 1.61, "z_raw": 0.41, "z_adj": -1.09, "repl_z": 1.5, "type": "P", "rank_RP": 80}, {"rank": 159, "name": "Taj Bradley", "team": "MIN", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 131, "era": 4.24, "whip": 1.32, "qs": 10, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.7, "z_era": -0.59, "z_whip": -0.37, "z_qs": 0.64, "z_svhld": 0.0, "z_raw": 0.38, "z_adj": -1.12, "repl_z": 1.5, "type": "P", "rank_RP": 81}, {"rank": 160, "name": "Seranthony Dom\u00ednguez", "team": "CHW", "elig": "SP/RP", "primary": "RP", "espn": 243, "k": 71, "era": 3.84, "whip": 1.3, "qs": 0, "sv": 20, "hld": 6, "svhld": 26, "z_k": -0.56, "z_era": 0.24, "z_whip": -0.14, "z_qs": -0.99, "z_svhld": 1.78, "z_raw": 0.33, "z_adj": -1.17, "repl_z": 1.5, "type": "P", "rank_RP": 82}, {"rank": 161, "name": "Luis Severino", "team": "ATH", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 141, "era": 4.51, "whip": 1.35, "qs": 14, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.91, "z_era": -1.16, "z_whip": -0.72, "z_qs": 1.3, "z_svhld": 0.0, "z_raw": 0.33, "z_adj": -1.17, "repl_z": 1.5, "type": "P", "rank_RP": 83}, {"rank": 162, "name": "Justin Verlander", "team": "DET", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 120, "era": 4.37, "whip": 1.3, "qs": 11, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.47, "z_era": -0.87, "z_whip": -0.14, "z_qs": 0.81, "z_svhld": 0.0, "z_raw": 0.27, "z_adj": -1.23, "repl_z": 1.5, "type": "P", "rank_RP": 84}, {"rank": 163, "name": "Drew Anderson", "team": "DET", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 90, "era": 3.72, "whip": 1.26, "qs": 2, "sv": 0, "hld": 9, "svhld": 9, "z_k": -0.16, "z_era": 0.49, "z_whip": 0.32, "z_qs": -0.66, "z_svhld": 0.26, "z_raw": 0.25, "z_adj": -1.25, "repl_z": 1.5, "type": "P", "rank_RP": 85}, {"rank": 164, "name": "Michael McGreevy", "team": "STL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 93, "era": 4.05, "whip": 1.31, "qs": 11, "sv": 0, "hld": 1, "svhld": 1, "z_k": -0.1, "z_era": -0.2, "z_whip": -0.26, "z_qs": 0.81, "z_svhld": 0.0, "z_raw": 0.25, "z_adj": -1.25, "repl_z": 1.5, "type": "P", "rank_RP": 86}, {"rank": 165, "name": "Slade Cecconi", "team": "CLE", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 132, "era": 4.52, "whip": 1.31, "qs": 12, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.72, "z_era": -1.18, "z_whip": -0.26, "z_qs": 0.97, "z_svhld": 0.0, "z_raw": 0.25, "z_adj": -1.25, "repl_z": 1.5, "type": "P", "rank_RP": 87}, {"rank": 166, "name": "Logan Henderson", "team": "MIL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 97, "era": 4.16, "whip": 1.23, "qs": 6, "sv": 0, "hld": 1, "svhld": 1, "z_k": -0.02, "z_era": -0.43, "z_whip": 0.67, "z_qs": -0.01, "z_svhld": 0.0, "z_raw": 0.21, "z_adj": -1.29, "repl_z": 1.5, "type": "P", "rank_RP": 88}, {"rank": 167, "name": "Gregory Soto", "team": "PIT", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 66, "era": 3.57, "whip": 1.29, "qs": 0, "sv": 4, "hld": 14, "svhld": 18, "z_k": -0.67, "z_era": 0.81, "z_whip": -0.03, "z_qs": -0.99, "z_svhld": 1.07, "z_raw": 0.19, "z_adj": -1.31, "repl_z": 1.5, "type": "P", "rank_RP": 89}, {"rank": 168, "name": "Christian Scott", "team": "NYM", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 40, "era": 3.6, "whip": 1.16, "qs": 1, "sv": 0, "hld": 1, "svhld": 1, "z_k": -1.21, "z_era": 0.75, "z_whip": 1.48, "z_qs": -0.83, "z_svhld": 0.0, "z_raw": 0.19, "z_adj": -1.31, "repl_z": 1.5, "type": "P", "rank_RP": 90}, {"rank": 169, "name": "A.J. Puk", "team": "ARI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 48, "era": 3.46, "whip": 1.2, "qs": 0, "sv": 7, "hld": 1, "svhld": 8, "z_k": -1.05, "z_era": 1.04, "z_whip": 1.01, "z_qs": -0.99, "z_svhld": 0.17, "z_raw": 0.18, "z_adj": -1.32, "repl_z": 1.5, "type": "P", "rank_RP": 91}, {"rank": 170, "name": "Grant Holmes", "team": "ATL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 137, "era": 4.24, "whip": 1.35, "qs": 10, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.83, "z_era": -0.59, "z_whip": -0.72, "z_qs": 0.64, "z_svhld": 0.0, "z_raw": 0.16, "z_adj": -1.34, "repl_z": 1.5, "type": "P", "rank_RP": 92}, {"rank": 172, "name": "Matthew Liberatore", "team": "STL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 130, "era": 4.33, "whip": 1.35, "qs": 12, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.68, "z_era": -0.78, "z_whip": -0.72, "z_qs": 0.97, "z_svhld": 0.0, "z_raw": 0.15, "z_adj": -1.35, "repl_z": 1.5, "type": "P", "rank_RP": 93}, {"rank": 173, "name": "Ben Joyce", "team": "LAA", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 59, "era": 3.42, "whip": 1.27, "qs": 0, "sv": 13, "hld": 0, "svhld": 13, "z_k": -0.81, "z_era": 1.12, "z_whip": 0.2, "z_qs": -0.99, "z_svhld": 0.62, "z_raw": 0.14, "z_adj": -1.36, "repl_z": 1.5, "type": "P", "rank_RP": 94}, {"rank": 174, "name": "Shawn Armstrong", "team": "CLE", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 68, "era": 3.91, "whip": 1.25, "qs": 0, "sv": 3, "hld": 16, "svhld": 19, "z_k": -0.62, "z_era": 0.1, "z_whip": 0.44, "z_qs": -0.99, "z_svhld": 1.16, "z_raw": 0.09, "z_adj": -1.41, "repl_z": 1.5, "type": "P", "rank_RP": 95}, {"rank": 175, "name": "Andrew Nardi", "team": "MIA", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 67, "era": 3.56, "whip": 1.24, "qs": 0, "sv": 0, "hld": 10, "svhld": 10, "z_k": -0.65, "z_era": 0.83, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.35, "z_raw": 0.09, "z_adj": -1.41, "repl_z": 1.5, "type": "P", "rank_RP": 96}, {"rank": 177, "name": "Tyler Holton", "team": "DET", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 63, "era": 3.71, "whip": 1.25, "qs": 0, "sv": 1, "hld": 14, "svhld": 15, "z_k": -0.73, "z_era": 0.52, "z_whip": 0.44, "z_qs": -0.99, "z_svhld": 0.8, "z_raw": 0.04, "z_adj": -1.46, "repl_z": 1.5, "type": "P", "rank_RP": 97}, {"rank": 179, "name": "Zack Littell", "team": "WSN", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 113, "era": 4.56, "whip": 1.29, "qs": 12, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.32, "z_era": -1.26, "z_whip": -0.03, "z_qs": 0.97, "z_svhld": 0.0, "z_raw": 0.0, "z_adj": -1.5, "repl_z": 1.5, "type": "P", "rank_RP": 98}, {"rank": 180, "name": "Clayton Beeter", "team": "WSN", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 70, "era": 3.78, "whip": 1.34, "qs": 0, "sv": 17, "hld": 9, "svhld": 26, "z_k": -0.58, "z_era": 0.37, "z_whip": -0.6, "z_qs": -0.99, "z_svhld": 1.78, "z_raw": -0.01, "z_adj": -1.51, "repl_z": 1.5, "type": "P", "rank_RP": 99}, {"rank": 181, "name": "Angel Zerpa", "team": "MIL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 59, "era": 3.46, "whip": 1.27, "qs": 0, "sv": 0, "hld": 12, "svhld": 12, "z_k": -0.81, "z_era": 1.04, "z_whip": 0.2, "z_qs": -0.99, "z_svhld": 0.54, "z_raw": -0.02, "z_adj": -1.52, "repl_z": 1.5, "type": "P", "rank_RP": 100}, {"rank": 183, "name": "JoJo Romero", "team": "STL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 61, "era": 3.57, "whip": 1.33, "qs": 0, "sv": 12, "hld": 9, "svhld": 21, "z_k": -0.77, "z_era": 0.81, "z_whip": -0.49, "z_qs": -0.99, "z_svhld": 1.33, "z_raw": -0.11, "z_adj": -1.61, "repl_z": 1.5, "type": "P", "rank_RP": 101}, {"rank": 184, "name": "Drew Pomeranz", "team": "LAA", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 61, "era": 3.73, "whip": 1.24, "qs": 0, "sv": 3, "hld": 10, "svhld": 13, "z_k": -0.77, "z_era": 0.47, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.62, "z_raw": -0.12, "z_adj": -1.62, "repl_z": 1.5, "type": "P", "rank_RP": 102}, {"rank": 185, "name": "Justin Wilson", "team": "", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 46, "era": 3.45, "whip": 1.21, "qs": 0, "sv": 0, "hld": 0, "svhld": 0, "z_k": -1.09, "z_era": 1.06, "z_whip": 0.9, "z_qs": -0.99, "z_svhld": 0.0, "z_raw": -0.12, "z_adj": -1.62, "repl_z": 1.5, "type": "P", "rank_RP": 103}, {"rank": 186, "name": "Aaron Bummer", "team": "ATL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 61, "era": 3.39, "whip": 1.3, "qs": 0, "sv": 0, "hld": 12, "svhld": 12, "z_k": -0.77, "z_era": 1.18, "z_whip": -0.14, "z_qs": -0.99, "z_svhld": 0.54, "z_raw": -0.18, "z_adj": -1.68, "repl_z": 1.5, "type": "P", "rank_RP": 104}, {"rank": 187, "name": "Erik Miller", "team": "SFG", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 71, "era": 3.45, "whip": 1.34, "qs": 0, "sv": 1, "hld": 15, "svhld": 16, "z_k": -0.56, "z_era": 1.06, "z_whip": -0.6, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": -0.2, "z_adj": -1.7, "repl_z": 1.5, "type": "P", "rank_RP": 105}, {"rank": 188, "name": "Michael Soroka", "team": "ARI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 104, "era": 4.03, "whip": 1.29, "qs": 5, "sv": 5, "hld": 1, "svhld": 6, "z_k": 0.13, "z_era": -0.15, "z_whip": -0.03, "z_qs": -0.17, "z_svhld": 0.0, "z_raw": -0.22, "z_adj": -1.72, "repl_z": 1.5, "type": "P", "rank_RP": 106}, {"rank": 189, "name": "Sam Hentges", "team": "SFG", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 46, "era": 3.34, "whip": 1.24, "qs": 0, "sv": 0, "hld": 1, "svhld": 1, "z_k": -1.09, "z_era": 1.29, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.0, "z_raw": -0.24, "z_adj": -1.74, "repl_z": 1.5, "type": "P", "rank_RP": 107}, {"rank": 190, "name": "Kyle Finnegan", "team": "DET", "elig": "SP/RP", "primary": "RP", "espn": 285, "k": 62, "era": 3.76, "whip": 1.28, "qs": 0, "sv": 4, "hld": 13, "svhld": 17, "z_k": -0.75, "z_era": 0.41, "z_whip": 0.09, "z_qs": -0.99, "z_svhld": 0.98, "z_raw": -0.26, "z_adj": -1.76, "repl_z": 1.5, "type": "P", "rank_RP": 108}, {"rank": 191, "name": "Kevin Ginkel", "team": "ARI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 66, "era": 3.79, "whip": 1.29, "qs": 0, "sv": 3, "hld": 15, "svhld": 18, "z_k": -0.67, "z_era": 0.35, "z_whip": -0.03, "z_qs": -0.99, "z_svhld": 1.07, "z_raw": -0.27, "z_adj": -1.77, "repl_z": 1.5, "type": "P", "rank_RP": 109}, {"rank": 192, "name": "Phil Maton", "team": "CHC", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 67, "era": 3.82, "whip": 1.28, "qs": 0, "sv": 2, "hld": 15, "svhld": 17, "z_k": -0.65, "z_era": 0.28, "z_whip": 0.09, "z_qs": -0.99, "z_svhld": 0.98, "z_raw": -0.29, "z_adj": -1.79, "repl_z": 1.5, "type": "P", "rank_RP": 110}, {"rank": 195, "name": "Landen Roupp", "team": "SFG", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 120, "era": 4.1, "whip": 1.37, "qs": 9, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.47, "z_era": -0.3, "z_whip": -0.95, "z_qs": 0.48, "z_svhld": 0.0, "z_raw": -0.3, "z_adj": -1.8, "repl_z": 1.5, "type": "P", "rank_RP": 111}, {"rank": 196, "name": "Lucas Erceg", "team": "KCR", "elig": "SP/RP", "primary": "RP", "espn": 282, "k": 63, "era": 3.65, "whip": 1.29, "qs": 0, "sv": 2, "hld": 13, "svhld": 15, "z_k": -0.73, "z_era": 0.64, "z_whip": -0.03, "z_qs": -0.99, "z_svhld": 0.8, "z_raw": -0.31, "z_adj": -1.81, "repl_z": 1.5, "type": "P", "rank_RP": 112}, {"rank": 197, "name": "Eduardo Rodriguez", "team": "ARI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 119, "era": 4.28, "whip": 1.35, "qs": 10, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.45, "z_era": -0.68, "z_whip": -0.72, "z_qs": 0.64, "z_svhld": 0.0, "z_raw": -0.31, "z_adj": -1.81, "repl_z": 1.5, "type": "P", "rank_RP": 113}, {"rank": 198, "name": "Cole Sands", "team": "MIN", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 68, "era": 3.92, "whip": 1.26, "qs": 0, "sv": 3, "hld": 13, "svhld": 16, "z_k": -0.62, "z_era": 0.08, "z_whip": 0.32, "z_qs": -0.99, "z_svhld": 0.89, "z_raw": -0.32, "z_adj": -1.82, "repl_z": 1.5, "type": "P", "rank_RP": 114}, {"rank": 199, "name": "Kyle Harrison", "team": "MIL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 113, "era": 4.21, "whip": 1.31, "qs": 7, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.32, "z_era": -0.53, "z_whip": -0.26, "z_qs": 0.15, "z_svhld": 0.0, "z_raw": -0.32, "z_adj": -1.82, "repl_z": 1.5, "type": "P", "rank_RP": 115}, {"rank": 200, "name": "Tanner Banks", "team": "PHI", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 60, "era": 3.79, "whip": 1.24, "qs": 0, "sv": 0, "hld": 12, "svhld": 12, "z_k": -0.79, "z_era": 0.35, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.54, "z_raw": -0.34, "z_adj": -1.84, "repl_z": 1.5, "type": "P", "rank_RP": 116}, {"rank": 201, "name": "Bennett Sousa", "team": "HOU", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 57, "era": 3.6, "whip": 1.23, "qs": 0, "sv": 0, "hld": 7, "svhld": 7, "z_k": -0.86, "z_era": 0.75, "z_whip": 0.67, "z_qs": -0.99, "z_svhld": 0.09, "z_raw": -0.34, "z_adj": -1.84, "repl_z": 1.5, "type": "P", "rank_RP": 117}, {"rank": 202, "name": "Tobias Myers", "team": "NYM", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 67, "era": 3.95, "whip": 1.23, "qs": 1, "sv": 0, "hld": 11, "svhld": 11, "z_k": -0.65, "z_era": 0.01, "z_whip": 0.67, "z_qs": -0.83, "z_svhld": 0.44, "z_raw": -0.36, "z_adj": -1.86, "repl_z": 1.5, "type": "P", "rank_RP": 118}, {"rank": 205, "name": "Jonah Tong", "team": "NYM", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 30, "era": 3.41, "whip": 1.24, "qs": 2, "sv": 0, "hld": 1, "svhld": 1, "z_k": -1.42, "z_era": 1.14, "z_whip": 0.55, "z_qs": -0.66, "z_svhld": 0.0, "z_raw": -0.39, "z_adj": -1.89, "repl_z": 1.5, "type": "P", "rank_RP": 119}, {"rank": 206, "name": "Jacob Lopez", "team": "ATH", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 124, "era": 4.35, "whip": 1.34, "qs": 9, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0.55, "z_era": -0.82, "z_whip": -0.6, "z_qs": 0.48, "z_svhld": 0.0, "z_raw": -0.39, "z_adj": -1.89, "repl_z": 1.5, "type": "P", "rank_RP": 120}, {"rank": 208, "name": "Brock Stewart", "team": "LAD", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 48, "era": 3.61, "whip": 1.21, "qs": 0, "sv": 0, "hld": 1, "svhld": 1, "z_k": -1.05, "z_era": 0.72, "z_whip": 0.9, "z_qs": -0.99, "z_svhld": 0.0, "z_raw": -0.42, "z_adj": -1.92, "repl_z": 1.5, "type": "P", "rank_RP": 121}, {"rank": 209, "name": "Patrick Sandoval", "team": "BOS", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 91, "era": 3.76, "whip": 1.32, "qs": 4, "sv": 0, "hld": 1, "svhld": 1, "z_k": -0.14, "z_era": 0.41, "z_whip": -0.37, "z_qs": -0.34, "z_svhld": 0.0, "z_raw": -0.44, "z_adj": -1.94, "repl_z": 1.5, "type": "P", "rank_RP": 122}, {"rank": 210, "name": "Steven Okert", "team": "HOU", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 71, "era": 3.98, "whip": 1.25, "qs": 0, "sv": 0, "hld": 14, "svhld": 14, "z_k": -0.56, "z_era": -0.05, "z_whip": 0.44, "z_qs": -0.99, "z_svhld": 0.71, "z_raw": -0.45, "z_adj": -1.95, "repl_z": 1.5, "type": "P", "rank_RP": 123}, {"rank": 211, "name": "Nick Martinez", "team": "TBR", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 114, "era": 4.39, "whip": 1.32, "qs": 9, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.34, "z_era": -0.91, "z_whip": -0.37, "z_qs": 0.48, "z_svhld": 0.0, "z_raw": -0.46, "z_adj": -1.96, "repl_z": 1.5, "type": "P", "rank_RP": 124}, {"rank": 212, "name": "Kirby Yates", "team": "LAA", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 68, "era": 3.9, "whip": 1.3, "qs": 0, "sv": 9, "hld": 10, "svhld": 19, "z_k": -0.62, "z_era": 0.12, "z_whip": -0.14, "z_qs": -0.99, "z_svhld": 1.16, "z_raw": -0.47, "z_adj": -1.97, "repl_z": 1.5, "type": "P", "rank_RP": 125}, {"rank": 213, "name": "Andrew Kittredge", "team": "BAL", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 60, "era": 3.89, "whip": 1.26, "qs": 0, "sv": 3, "hld": 12, "svhld": 15, "z_k": -0.79, "z_era": 0.14, "z_whip": 0.32, "z_qs": -0.99, "z_svhld": 0.8, "z_raw": -0.52, "z_adj": -2.02, "repl_z": 1.5, "type": "P", "rank_RP": 126}, {"rank": 214, "name": "Paul Blackburn", "team": "NYY", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 58, "era": 3.89, "whip": 1.25, "qs": 1, "sv": 0, "hld": 12, "svhld": 12, "z_k": -0.84, "z_era": 0.14, "z_whip": 0.44, "z_qs": -0.83, "z_svhld": 0.54, "z_raw": -0.55, "z_adj": -2.05, "repl_z": 1.5, "type": "P", "rank_RP": 127}, {"rank": 215, "name": "Keaton Winn", "team": "SFG", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 51, "era": 3.62, "whip": 1.24, "qs": 0, "sv": 1, "hld": 7, "svhld": 8, "z_k": -0.98, "z_era": 0.7, "z_whip": 0.55, "z_qs": -0.99, "z_svhld": 0.17, "z_raw": -0.55, "z_adj": -2.05, "repl_z": 1.5, "type": "P", "rank_RP": 128}, {"rank": 217, "name": "Taylor Rogers", "team": "MIN", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 64, "era": 3.94, "whip": 1.34, "qs": 0, "sv": 19, "hld": 6, "svhld": 25, "z_k": -0.71, "z_era": 0.03, "z_whip": -0.6, "z_qs": -0.99, "z_svhld": 1.7, "z_raw": -0.57, "z_adj": -2.07, "repl_z": 1.5, "type": "P", "rank_RP": 129}, {"rank": 218, "name": "Blake Treinen", "team": "LAD", "elig": "SP/RP", "primary": "RP", "espn": 0, "k": 60, "era": 3.79, "whip": 1.26, "qs": 0, "sv": 0, "hld": 12, "svhld": 12, "z_k": -0.79, "z_era": 0.35, "z_whip": 0.32, "z_qs": -0.99, "z_svhld": 0.54, "z_raw": -0.57, "z_adj": -2.07, "repl_z": 1.5, "type": "P", "rank_RP": 130}, {"rank": 219, "name": "Jos\u00e9 Berr\u00edos", "team": "TOR", "elig": "SP/RP", "primary": "RP", "espn": 256, "k": 103, "era": 4.29, "whip": 1.3, "qs": 7, "sv": 0, "hld": 1, "svhld": 1, "z_k": 0.11, "z_era": -0.7, "z_whip": -0.14, "z_qs": 0.15, "z_svhld": 0.0, "z_raw": -0.58, "z_adj": -2.08, "repl_z": 1.5, "type": "P", "rank_RP": 131}]}</script>
 
 <script>
+var data_str=document.getElementById("jd0").textContent+document.getElementById("jd1").textContent+document.getElementById("jd2").textContent+document.getElementById("jd3").textContent+document.getElementById("jd4").textContent+document.getElementById("jd5").textContent;
+var RAW=JSON.parse(data_str);
+
 var TOTAL=400;
 var OF_BLEND=0.5,OF_SLOTS=48;
 var PS={C:13,"1B":19,"2B":19,"3B":19,SS:19,LF:14,CF:14,RF:14,SP:57,RP:37};
 var PH=["C","SS","2B","3B","1B","LF","CF","RF","OF","DH"];
-var TABS=["Board","C","1B","2B","3B","SS","LF","CF","RF","SP","RP"];
-var TL={"Board":"All","C":"C","1B":"1B","2B":"2B","3B":"3B","SS":"SS","LF":"LF","CF":"CF","RF":"RF","SP":"SP","RP":"RP"};
+var TABS=["Board","C","1B","2B","3B","SS","LF","CF","RF","SP","RP","Team"];
+var TL={"Board":"All","C":"C","1B":"1B","2B":"2B","3B":"3B","SS":"SS","LF":"LF","CF":"CF","RF":"RF","SP":"SP","RP":"RP","Team":"My Team"};
 var HC=[["PA","pa"],["HR","hr"],["R","r"],["RBI","rbi"],["SB","sb"],["OBP","obp"],["zHR","z_hr"],["zR","z_r"],["zRBI","z_rbi"],["zSB","z_sb"],["zOBP","z_obp"]];
 var PC=[["K","k"],["ERA","era"],["WHIP","whip"],["QS","qs"],["SV+HLD","svhld"],["zK","z_k"],["zERA","z_era"],["zWHIP","z_whip"],["zQS","z_qs"],["zSVHLD","z_svhld"]];
 var RC={C:"#f5c842",SS:"#ff8080","2B":"#7ab8f5","3B":"#7af57a","1B":"#7af5c0",LF:"#c07af5",CF:"#f5d07a",RF:"#f57ac0",SP:"#7aaaf5",RP:"#f57a7a"};
-
-var data_str = document.getElementById("jd0").textContent+document.getElementById("jd1").textContent+document.getElementById("jd2").textContent+document.getElementById("jd3").textContent+document.getElementById("jd4").textContent+document.getElementById("jd5").textContent;
-var RAW = JSON.parse(data_str);
 
 var players=RAW.Board.map(function(p){return Object.assign({},p);});
 var drafted=new Set(JSON.parse(localStorage.getItem("fb26")||"[]"));
@@ -122,7 +157,7 @@ function isRP(p){return p.primary==="RP";}
 function isLF(p){return hp(p,"LF");}function isCF(p){return hp(p,"CF");}
 function isRF(p){return hp(p,"RF");}function isOF(p){return isLF(p)||isCF(p)||isRF(p);}
 
-function repl(){
+function calcRepl(){
   var av=players.filter(function(p){return !drafted.has(p.name);});
   function rz(fn,slots){
     var pool=av.filter(fn).sort(function(a,b){return b.z_raw-a.z_raw;});
@@ -136,42 +171,37 @@ function repl(){
     "2B":rz(function(p){return hp(p,"2B");},PS["2B"]),
     "3B":rz(function(p){return hp(p,"3B");},PS["3B"]),
     SS:rz(function(p){return hp(p,"SS");},PS.SS),
-    LF:OF_BLEND*sLF+(1-OF_BLEND)*uni,
-    CF:OF_BLEND*sCF+(1-OF_BLEND)*uni,
-    RF:OF_BLEND*sRF+(1-OF_BLEND)*uni,
+    LF:OF_BLEND*sLF+(1-OF_BLEND)*uni,CF:OF_BLEND*sCF+(1-OF_BLEND)*uni,RF:OF_BLEND*sRF+(1-OF_BLEND)*uni,
     SP:rz(isSP,PS.SP),RP:rz(isRP,PS.RP)
   };
 }
-
 function ppos(p){
   if(p.type==="P")return p.primary;
   var parts=p.elig.toUpperCase().split("/");
   for(var i=0;i<PH.length;i++){if(parts.indexOf(PH[i])>=0)return PH[i];}
   return "DH";
 }
-
 function recalc(){
-  var r=repl();
+  var r=calcRepl();
   players.forEach(function(p){
     var rv=r[ppos(p)]||0;
     p.repl_z=Math.round(rv*1000)/1000;
     p.z_adj=Math.round((p.z_raw-rv)*100)/100;
   });
   players.slice().sort(function(a,b){return b.z_adj-a.z_adj;}).forEach(function(p,i){p.overall_rank=i+1;});
-  TABS.filter(function(t){return t!=="Board";}).forEach(function(tab){
+  TABS.filter(function(t){return t!=="Board"&&t!=="Team";}).forEach(function(tab){
     var tp=tabPlayers(tab,players);
     tp.sort(function(a,b){return b.z_adj-a.z_adj;});
     tp.forEach(function(p,i){p["rank_"+tab]=i+1;});
   });
   return r;
 }
-
 function tabPlayers(tab,pool){
   if(tab==="Board")return pool;
   if(tab==="SP"||tab==="RP")return pool.filter(function(p){return p.type==="P"&&p.primary===tab;});
+  if(tab==="Team")return pool;
   return pool.filter(function(p){return p.type==="H"&&hp(p,tab);});
 }
-
 function zc(v){if(v>=5)return"zh";if(v>=2)return"zm";if(v>=0)return"zl";return"zn";}
 function pb(pos){return'<span class="pb pb-'+pos+'">'+pos+'</span>';}
 function fv(v,k){
@@ -181,7 +211,6 @@ function fv(v,k){
   if(typeof v==="number"&&v!==Math.floor(v))return v.toFixed(2);
   return ""+v;
 }
-
 function buildRow(p,tab){
   var isH=p.type==="H"||["C","1B","2B","3B","SS","LF","CF","RF"].indexOf(tab)>=0;
   var isB=tab==="Board";
@@ -200,21 +229,21 @@ function buildRow(p,tab){
     var k=c[1],h=c[0];
     var isZ=["zHR","zR","zRBI","zSB","zOBP","zK","zERA","zWHIP","zQS","zSVHLD"].indexOf(h)>=0;
     if(isB){
-      var isHcol=["zHR","zR","zRBI","zSB","zOBP","PA","HR","R","RBI","SB","OBP"].indexOf(h)>=0;
-      var isPcol=["zK","zERA","zWHIP","zQS","zSVHLD","K","ERA","WHIP","QS","SV+HLD"].indexOf(h)>=0;
-      if(isHcol&&!isH){r+='<td style="color:var(--border)">-</td>';return;}
-      if(isPcol&&isH){r+='<td style="color:var(--border)">-</td>';return;}
+      var isHc=["zHR","zR","zRBI","zSB","zOBP","PA","HR","R","RBI","SB","OBP"].indexOf(h)>=0;
+      var isPc=["zK","zERA","zWHIP","zQS","zSVHLD","K","ERA","WHIP","QS","SV+HLD"].indexOf(h)>=0;
+      if(isHc&&!isH){r+='<td style="color:var(--border)">-</td>';return;}
+      if(isPc&&isH){r+='<td style="color:var(--border)">-</td>';return;}
     }
     var v=p[k];
     if(isZ)r+='<td class="'+zc(v||0)+'">'+fv(v,k)+'</td>';
     else r+='<td>'+fv(v,k)+'</td>';
   });
+  r+='<td style="color:var(--muted);font-size:11px;">'+(typeof p.z_raw==="number"?p.z_raw.toFixed(2):"-")+'</td>';
   r+='<td style="color:var(--muted);font-size:11px;">'+(typeof p.repl_z==="number"?p.repl_z.toFixed(2):"-")+'</td>';
   r+='<td class="adjz '+zc(p.z_adj)+'">'+p.z_adj.toFixed(2)+'</td>';
   r+='<td><button class="db" onclick="toggle(this)">'+(drafted.has(p.name)?"Undo":"Draft")+'</button></td>';
   return r+"</tr>";
 }
-
 function buildTable(tab){
   var tp=tabPlayers(tab,players).sort(function(a,b){return b.z_adj-a.z_adj;});
   var isB=tab==="Board",isH=["C","1B","2B","3B","SS","LF","CF","RF"].indexOf(tab)>=0;
@@ -223,47 +252,43 @@ function buildTable(tab){
   hdrs=hdrs.concat(["Pos","Elig","ESPN"]);
   if(isH||isB)HC.forEach(function(c){hdrs.push(c[0]);});
   if(!isH||isB)PC.forEach(function(c){hdrs.push(c[0]);});
-  hdrs=hdrs.concat(["Repl","ADJ Z",""]);
+  hdrs=hdrs.concat(["Raw Z","Repl","ADJ Z",""]);
   var thead="<tr>"+hdrs.map(function(h,i){
     return'<th class="'+(i<=1||i===5?"left":"")+'" data-tab="'+tab+'" data-col="'+h+'" data-ci="'+i+'" onclick="sortCol(this)">'+h+'</th>';
   }).join("")+"</tr>";
   var tbody=tp.map(function(p){return buildRow(p,tab);}).join("");
   return'<table id="tbl_'+tab+'"><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>';
 }
-
 function renderRepl(r){
   var el=document.getElementById("rb");
   el.innerHTML=Object.keys(RC).map(function(pos){
     var v=r[pos]||0,ch=prevRepl[pos]!==undefined&&Math.abs(prevRepl[pos]-v)>0.01;
-    return'<span class="ri" style="'+(ch?"color:var(--gold);font-weight:700":"")+'">'+'<span style="color:'+RC[pos]+';font-weight:700">'+pos+'</span>'+'<span style="color:var(--muted)"> '+(v>=0?"+":"")+v.toFixed(2)+'</span></span>';
+    return'<span class="ri" style="'+(ch?"color:var(--gold);font-weight:700":"")+'">'
+      +'<span style="color:'+RC[pos]+';font-weight:700">'+pos+'</span>'
+      +'<span style="color:var(--muted)"> '+(v>=0?"+":"")+v.toFixed(2)+'</span></span>';
   }).join("");
 }
-
 function liveUpdate(old){
   TABS.forEach(function(tab){
+    if(tab==="Team")return;
     var wrap=document.getElementById("tcont_"+tab);if(!wrap)return;
     var isB=tab==="Board";
-    var rows=wrap.querySelectorAll("tbody tr");
-    rows.forEach(function(row){
-      var dn=row.getAttribute("data-name");
-      if(!dn)return;
+    wrap.querySelectorAll("tbody tr").forEach(function(row){
+      var dn=row.getAttribute("data-name");if(!dn)return;
       var name=dn.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
       var p=null;
       for(var i=0;i<players.length;i++){if(players[i].name===name){p=players[i];break;}}
       if(!p)return;
       var cells=row.children;
       cells[0].textContent=isB?p.overall_rank:(p["rank_"+tab]||"-");
-      var adjCell=cells[cells.length-2];
-      var replCell=cells[cells.length-3];
+      var adjCell=cells[cells.length-2],replCell=cells[cells.length-3];
       if(replCell)replCell.textContent=p.repl_z.toFixed(2);
       if(adjCell){
-        var newZ=p.z_adj;
-        adjCell.textContent=newZ.toFixed(2);
-        adjCell.className="adjz "+zc(newZ);
-        var prev=old[name]||newZ;
-        if(Math.abs(newZ-prev)>0.05){
+        var nz=p.z_adj;adjCell.textContent=nz.toFixed(2);adjCell.className="adjz "+zc(nz);
+        var pv=old[name]||nz;
+        if(Math.abs(nz-pv)>0.05){
           row.classList.remove("z-rose","z-fell");
-          row.classList.add(newZ>prev?"z-rose":"z-fell");
+          row.classList.add(nz>pv?"z-rose":"z-fell");
           setTimeout(function(){row.classList.remove("z-rose","z-fell");},800);
         }
       }
@@ -272,104 +297,57 @@ function liveUpdate(old){
     if(tbody){
       var arr=Array.prototype.slice.call(tbody.querySelectorAll("tr"));
       arr.sort(function(a,b){
-        var an=a.getAttribute("data-name"),bn=b.getAttribute("data-name");
-        if(!an||!bn)return 0;
-        an=an.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
-        bn=bn.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
+        var an=(a.getAttribute("data-name")||"").replace(/&#39;/g,"'").replace(/&quot;/g,'"');
+        var bn=(b.getAttribute("data-name")||"").replace(/&#39;/g,"'").replace(/&quot;/g,'"');
         var na=null,nb=null;
-        for(var i=0;i<players.length;i++){
-          if(players[i].name===an)na=players[i];
-          if(players[i].name===bn)nb=players[i];
-        }
-        if(!na||!nb)return 0;
-        return nb.z_adj-na.z_adj;
+        for(var i=0;i<players.length;i++){if(players[i].name===an)na=players[i];if(players[i].name===bn)nb=players[i];}
+        if(!na||!nb)return 0;return nb.z_adj-na.z_adj;
       });
       arr.forEach(function(r){tbody.appendChild(r);});
     }
   });
 }
-
 function doRecalc(){
   var old={};players.forEach(function(p){old[p.name]=p.z_adj;});
-  var r=recalc();
-  renderRepl(r);prevRepl=Object.assign({},r);
-  liveUpdate(old);
-  var ind=document.getElementById("ri");
-  ind.classList.add("show");setTimeout(function(){ind.classList.remove("show");},1500);
+  var r=recalc();renderRepl(r);prevRepl=Object.assign({},r);liveUpdate(old);
+  var ind=document.getElementById("ri");ind.classList.add("show");setTimeout(function(){ind.classList.remove("show");},1500);
   applyFilter();save();
 }
-
 function toggle(btn){
-  var row=btn.closest("tr");
-  var dn=row.getAttribute("data-name");
+  var row=btn.closest("tr"),dn=row.getAttribute("data-name");
   var name=dn.replace(/&#39;/g,"'").replace(/&quot;/g,'"');
   if(drafted.has(name)){
     drafted.delete(name);
-    document.querySelectorAll('[data-name="'+dn+'"]').forEach(function(r){
-      r.classList.remove("drafted");var b=r.querySelector(".db");if(b)b.textContent="Draft";
-    });
+    document.querySelectorAll('[data-name="'+dn+'"]').forEach(function(r){r.classList.remove("drafted");var b=r.querySelector(".db");if(b)b.textContent="Draft";});
   }else{
     drafted.add(name);
-    document.querySelectorAll('[data-name="'+dn+'"]').forEach(function(r){
-      r.classList.add("drafted");var b=r.querySelector(".db");if(b)b.textContent="Undo";
-    });
+    document.querySelectorAll('[data-name="'+dn+'"]').forEach(function(r){r.classList.add("drafted");var b=r.querySelector(".db");if(b)b.textContent="Undo";});
   }
   doRecalc();
 }
-
 function undraftAll(){
   if(!confirm("Reset the entire draft board?"))return;
-  drafted.clear();
-  document.querySelectorAll("tr.drafted").forEach(function(r){
-    r.classList.remove("drafted");var b=r.querySelector(".db");if(b)b.textContent="Draft";
-  });
-  doRecalc();
+  drafted.clear();myTeam={};ROSTER_SLOTS.forEach(function(s){myTeam[s.id]=null;});
+  localStorage.removeItem("fb26_team");
+  document.querySelectorAll("tr.drafted").forEach(function(r){r.classList.remove("drafted");var b=r.querySelector(".db");if(b)b.textContent="Draft";});
+  doRecalc();rebuildTeamPanel();
 }
-
 function save(){
   localStorage.setItem("fb26",JSON.stringify(Array.from(drafted)));
   document.getElementById("dc").textContent=drafted.size;
   document.getElementById("ac").textContent=TOTAL-drafted.size;
 }
-
-function buildUI(){
-  var tabsEl=document.getElementById("tabs");
-  var contEl=document.getElementById("contents");
-  var r=recalc();renderRepl(r);prevRepl=Object.assign({},r);
-  TABS.forEach(function(tab){
-    var t=document.createElement("div");
-    t.className="tab"+(tab==="Board"?" active":"");
-    t.id="tbtn_"+tab;
-    t.innerHTML=TL[tab]+' <span class="cnt">('+tabPlayers(tab,players).length+')</span>';
-    t.onclick=(function(tb){return function(){switchTab(tb);};})(tab);
-    tabsEl.appendChild(t);
-    var d=document.createElement("div");
-    d.className="tab-content"+(tab==="Board"?" active":"");
-    d.id="tcont_"+tab;
-    d.innerHTML='<div class="table-wrap">'+buildTable(tab)+'</div>';
-    contEl.appendChild(d);
-  });
-}
-
-function switchTab(tab){
-  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
-  document.querySelectorAll(".tab-content").forEach(function(c){c.classList.remove("active");});
-  document.getElementById("tbtn_"+tab).classList.add("active");
-  document.getElementById("tcont_"+tab).classList.add("active");
-  applyFilter();
-}
-
 function applyFilter(){
   var q=document.getElementById("srch").value.toLowerCase();
   var hd=document.getElementById("hd").checked;
   var cont=document.querySelector(".tab-content.active");if(!cont)return;
+  if(cont.id==="tcont_Team")return;
   cont.querySelectorAll("tbody tr").forEach(function(row){
     var name=(row.getAttribute("data-name")||"").toLowerCase();
     var show=(!q||name.indexOf(q)>=0)&&(!hd||!row.classList.contains("drafted"));
     row.style.display=show?"":"none";
   });
 }
-
 function sortCol(th){
   var tab=th.getAttribute("data-tab"),col=th.getAttribute("data-col"),ci=parseInt(th.getAttribute("data-ci"));
   if(!col)return;
@@ -395,15 +373,275 @@ function sortCol(th){
   th.classList.add(dir==="desc"?"sort-desc":"sort-asc");
 }
 
+/* ===== MY TEAM TAB ===== */
+var ROSTER_SLOTS=[
+  {id:"C",    label:"C",    elig:["C"]},
+  {id:"1B",   label:"1B",   elig:["1B"]},
+  {id:"2B",   label:"2B",   elig:["2B"]},
+  {id:"3B",   label:"3B",   elig:["3B"]},
+  {id:"SS",   label:"SS",   elig:["SS"]},
+  {id:"CI",   label:"CI",   elig:["1B","3B"]},
+  {id:"MI",   label:"MI",   elig:["2B","SS"]},
+  {id:"LF",   label:"LF",   elig:["LF"]},
+  {id:"CF",   label:"CF",   elig:["CF"]},
+  {id:"RF",   label:"RF",   elig:["RF"]},
+  {id:"OF",   label:"OF",   elig:["LF","CF","RF"]},
+  {id:"UTIL", label:"UTIL", elig:["C","1B","2B","3B","SS","LF","CF","RF","DH"]},
+  {id:"SP1",  label:"SP",   elig:["SP"]},
+  {id:"SP2",  label:"SP",   elig:["SP"]},
+  {id:"SP3",  label:"SP",   elig:["SP"]},
+  {id:"SP4",  label:"SP",   elig:["SP"]},
+  {id:"SP5",  label:"SP",   elig:["SP"]},
+  {id:"RP1",  label:"RP",   elig:["RP"]},
+  {id:"RP2",  label:"RP",   elig:["RP"]},
+  {id:"RP3",  label:"RP",   elig:["RP"]},
+  {id:"P1",   label:"P",    elig:["SP","RP"]},
+  {id:"P2",   label:"P",    elig:["SP","RP"]},
+  {id:"P3",   label:"P",    elig:["SP","RP"]},
+  {id:"BN1",  label:"BN",   elig:["C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"], bench:true},
+  {id:"BN2",  label:"BN",   elig:["C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"], bench:true},
+  {id:"BN3",  label:"BN",   elig:["C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"], bench:true},
+  {id:"BN4",  label:"BN",   elig:["C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"], bench:true}
+];
+var BW=0.60;
+var CW={z_hr:1.075,z_r:1.0,z_rbi:1.0,z_sb:1.0,z_obp:1.075,z_k:1.10,z_era:1.0,z_whip:1.0,z_qs:1.0,z_svhld:1.0};
+var HCAT=["z_hr","z_r","z_rbi","z_sb","z_obp"];
+var PCAT=["z_k","z_era","z_whip","z_qs","z_svhld"];
+var myTeam={};
+ROSTER_SLOTS.forEach(function(s){myTeam[s.id]=null;});
+try{
+  var st=JSON.parse(localStorage.getItem("fb26_team")||"{}");
+  Object.keys(st).forEach(function(sid){
+    if(st[sid]){var px=players.filter(function(x){return x.name===st[sid];})[0];if(px)myTeam[sid]=px;}
+  });
+}catch(e){}
+function saveTeam(){
+  var out={};
+  Object.keys(myTeam).forEach(function(sid){out[sid]=myTeam[sid]?myTeam[sid].name:null;});
+  localStorage.setItem("fb26_team",JSON.stringify(out));
+}
+function canTake(slot,player){
+  var pp=player.elig.toUpperCase().split("/");
+  for(var i=0;i<slot.elig.length;i++){if(pp.indexOf(slot.elig[i])>=0)return true;}
+  return false;
+}
+function teamPlayers(){
+  var out=[];ROSTER_SLOTS.forEach(function(s){if(myTeam[s.id])out.push(myTeam[s.id]);});return out;
+}
+function teamStats(){
+  var st={};HCAT.concat(PCAT).forEach(function(c){st[c]=0;});
+  ROSTER_SLOTS.forEach(function(slot){
+    var p=myTeam[slot.id];if(!p)return;
+    var w=slot.bench?BW:1.0;
+    HCAT.concat(PCAT).forEach(function(c){st[c]+=(p[c]||0)*w;});
+  });
+  return st;
+}
+function getRecs(){
+  var tn={};teamPlayers().forEach(function(p){tn[p.name]=true;});
+  var st=teamStats();
+  var wH={},wP={};
+  HCAT.forEach(function(c){if(st[c]<1.5)wH[c]=true;});
+  PCAT.forEach(function(c){
+    if(c==="z_era"&&st[c]>8)wP[c]=true;
+    else if(c==="z_whip"&&st[c]>6)wP[c]=true;
+    else if(c!=="z_era"&&c!=="z_whip"&&st[c]<1.5)wP[c]=true;
+  });
+  var clab={z_hr:"HR",z_r:"R",z_rbi:"RBI",z_sb:"SB",z_obp:"OBP",z_k:"K",z_era:"ERA",z_whip:"WHIP",z_qs:"QS",z_svhld:"SV+HLD"};
+  var avail=players.filter(function(p){return !drafted.has(p.name)&&!tn[p.name];});
+  avail.forEach(function(p){
+    var sc=p.z_adj,cats=p.type==="H"?HCAT:PCAT,wk=p.type==="H"?wH:wP;
+    cats.forEach(function(c){var b=(CW[c]-1.0)*(p[c]||0);if(wk[c])b*=2.0;sc+=b;});
+    p._rs=sc;
+    var reasons=[];
+    cats.forEach(function(c){if(wk[c]&&(p[c]||0)>0.3)reasons.push(clab[c]);});
+    p._rw=reasons.length>0?"Fills: "+reasons.join(", "):"Best available";
+  });
+  return avail.sort(function(a,b){return b._rs-a._rs;}).slice(0,5);
+}
+function buildScorecard(){
+  var st=teamStats(),n=teamPlayers().length;
+  if(n===0)return '<div class="scorecard-panel"><div class="team-panel-hdr">Category Scorecard</div><div class="team-empty">Add players to see stats</div></div>';
+  function gr(v,inv){return inv?(v>2?"strong":v>0?"mid":"weak"):(v>3?"strong":v>1?"mid":"weak");}
+  var cats=[{k:"z_hr",l:"HR",i:false},{k:"z_r",l:"R",i:false},{k:"z_rbi",l:"RBI",i:false},{k:"z_sb",l:"SB",i:false},{k:"z_obp",l:"OBP",i:false},{k:"z_k",l:"K",i:false},{k:"z_era",l:"ERA",i:true},{k:"z_whip",l:"WHIP",i:true},{k:"z_qs",l:"QS",i:false},{k:"z_svhld",l:"SV+HLD",i:false}];
+  var h='<div class="scorecard-panel"><div class="team-panel-hdr">Scorecard <span style="font-size:10px;font-weight:400;color:var(--muted)">('+n+'/27 slots)</span></div><div class="sc-grid">';
+  cats.forEach(function(c){
+    var v=st[c.k]||0,g=gr(v,c.i);
+    h+='<div class="sc-card '+g+'"><div class="sc-cat">'+c.l+'</div><div class="sc-val '+g+'">'+v.toFixed(1)+'</div><div class="sc-sub">'+(v>=0?"+":"")+v.toFixed(2)+' z</div></div>';
+  });
+  h+='</div></div>';return h;
+}
+function buildRecs(){
+  var recs=getRecs();
+  var h='<div class="recs-panel"><div class="team-panel-hdr">Recommendations <span style="font-size:10px;font-weight:400;color:var(--muted)">(HR/OBP+7.5% K+10%)</span></div>';
+  if(!recs.length){h+='<div class="team-empty">No recommendations</div>';}
+  else{recs.forEach(function(p){
+    var esc=p.name.replace(/&/g,"&amp;");
+    h+='<div class="rec-card" data-rn="'+esc+'">';
+    h+='<span class="rec-z '+zc(p.z_adj)+'">'+p.z_adj.toFixed(2)+'</span>';
+    h+='<div class="rec-name">'+p.name+'</div>';
+    h+='<div class="rec-meta">'+p.primary+' &middot; ESPN '+(p.espn>0?p.espn:"-")+' &middot; Raw Z '+p.z_raw.toFixed(2)+'</div>';
+    h+='<div class="rec-why">'+p._rw+'</div></div>';
+  });}
+  h+='</div>';return h;
+}
+function buildTeamTab(){
+  var secs=[
+    {l:"Hitting", ids:["C","1B","2B","3B","SS","CI","MI","LF","CF","RF","OF","UTIL"]},
+    {l:"Pitching",ids:["SP1","SP2","SP3","SP4","SP5","RP1","RP2","RP3","P1","P2","P3"]},
+    {l:"Bench",   ids:["BN1","BN2","BN3","BN4"]}
+  ];
+  var h='<div class="roster-panel"><div class="team-panel-hdr">Roster</div>';
+  secs.forEach(function(sec){
+    h+='<div class="roster-section-hdr">'+sec.l+'</div>';
+    sec.ids.forEach(function(sid){
+      var slot=ROSTER_SLOTS.filter(function(s){return s.id===sid;})[0];
+      var p=myTeam[sid],pn=p?p.name:"",fi=p?" filled":"";
+      var pnesc=pn.replace(/"/g,"&quot;");
+      h+='<div class="slot-row" id="row_'+sid+'">';
+      h+='<div class="slot-label">'+slot.label+'</div>';
+      h+='<div class="slot-wrap">';
+      h+='<input class="slot-inp'+fi+'" id="inp_'+sid+'" data-sid="'+sid+'" type="text" placeholder="Search..." value="'+pnesc+'" autocomplete="off">';
+      h+='<div class="ac-list" id="ac_'+sid+'"></div>';
+      h+='</div>';
+      h+=(p?'<button class="slot-clr" data-sid="'+sid+'">x</button>':'<span style="width:18px"></span>');
+      h+='</div>';
+    });
+  });
+  h+='</div>';
+  return '<div class="team-wrap">'+h+buildScorecard()+buildRecs()+'</div>';
+}
+function refreshTeamPanels(){
+  var wrap=document.getElementById("tcont_Team");if(!wrap)return;
+  var sc=wrap.querySelector(".scorecard-panel");
+  var rc=wrap.querySelector(".recs-panel");
+  function repl2(old,newHtml){if(!old)return;var d=document.createElement("div");d.innerHTML=newHtml;old.parentNode.replaceChild(d.firstChild,old);}
+  repl2(sc,buildScorecard());repl2(rc,buildRecs());
+  attachTeamEvents();
+}
+function rebuildTeamPanel(){
+  var wrap=document.getElementById("tcont_Team");if(!wrap)return;
+  wrap.innerHTML=buildTeamTab();attachTeamEvents();
+}
+function attachTeamEvents(){
+  var wrap=document.getElementById("tcont_Team");if(!wrap)return;
+  wrap.querySelectorAll(".slot-inp").forEach(function(inp){
+    if(inp._b)return;inp._b=true;
+    var sid=inp.getAttribute("data-sid");
+    inp.addEventListener("input",function(){showAc(inp,sid);});
+    inp.addEventListener("focus",function(){showAc(inp,sid);});
+    inp.addEventListener("keydown",function(e){acKey(e,sid);});
+    inp.addEventListener("blur",function(){setTimeout(function(){hideAc(sid);restoreInp(sid);},200);});
+  });
+  wrap.querySelectorAll(".slot-clr[data-sid]").forEach(function(btn){
+    if(btn._b)return;btn._b=true;
+    btn.addEventListener("click",function(){clearSlot(btn.getAttribute("data-sid"));});
+  });
+  wrap.querySelectorAll(".rec-card[data-rn]").forEach(function(card){
+    if(card._b)return;card._b=true;
+    card.addEventListener("click",function(){
+      switchTab("Board");
+      var s=document.getElementById("srch");
+      if(s){s.value=card.getAttribute("data-rn");applyFilter();}
+    });
+  });
+}
+function showAc(inp,sid){
+  var q=inp.value.toLowerCase().trim();
+  var ac=document.getElementById("ac_"+sid);if(!ac)return;
+  if(q.length<2){ac.style.display="none";return;}
+  var slot=ROSTER_SLOTS.filter(function(s){return s.id===sid;})[0];
+  var tn={};teamPlayers().forEach(function(p){if(!myTeam[sid]||p.name!==myTeam[sid].name)tn[p.name]=true;});
+  var matches=players.filter(function(p){return !tn[p.name]&&canTake(slot,p)&&p.name.toLowerCase().indexOf(q)>=0;}).slice(0,8);
+  if(!matches.length){ac.style.display="none";return;}
+  ac._m=matches;ac._s=-1;
+  var h="";
+  matches.forEach(function(p,i){
+    var e=p.name.replace(/"/g,"&quot;");
+    h+='<div class="ac-item" data-idx="'+i+'" data-sid="'+sid+'" data-name="'+e+'">';
+    h+=p.name+'<span class="ac-pos">'+p.primary+'</span><span class="ac-z">'+p.z_adj.toFixed(2)+'</span></div>';
+  });
+  ac.innerHTML=h;ac.style.display="block";
+  ac.querySelectorAll(".ac-item").forEach(function(item){
+    item.addEventListener("mousedown",function(e){e.preventDefault();pickSlot(item.getAttribute("data-sid"),item.getAttribute("data-name"));});
+  });
+}
+function hideAc(sid){var ac=document.getElementById("ac_"+sid);if(ac)ac.style.display="none";}
+function restoreInp(sid){var inp=document.getElementById("inp_"+sid),p=myTeam[sid];if(inp&&p&&inp.value!==p.name)inp.value=p.name;if(inp&&!p&&inp.value)inp.value="";}
+function acKey(e,sid){
+  var ac=document.getElementById("ac_"+sid);if(!ac||ac.style.display==="none")return;
+  var items=ac.querySelectorAll(".ac-item");
+  if(e.key==="ArrowDown"){e.preventDefault();ac._s=Math.min((ac._s||0)+1,items.length-1);items.forEach(function(el,i){el.classList.toggle("sel",i===ac._s);});}
+  else if(e.key==="ArrowUp"){e.preventDefault();ac._s=Math.max((ac._s||0)-1,0);items.forEach(function(el,i){el.classList.toggle("sel",i===ac._s);});}
+  else if(e.key==="Enter"){e.preventDefault();var m=ac._m;if(m&&m.length){var sel=ac._s>=0?m[ac._s]:m[0];if(sel)pickSlot(sid,sel.name);}}
+  else if(e.key==="Escape"){hideAc(sid);}
+}
+function pickSlot(sid,name){
+  var p=players.filter(function(x){return x.name===name;})[0];if(!p)return;
+  var old=myTeam[sid];
+  if(old){var el=false;ROSTER_SLOTS.forEach(function(s){if(s.id!==sid&&myTeam[s.id]&&myTeam[s.id].name===old.name)el=true;});if(!el)drafted.delete(old.name);}
+  myTeam[sid]=p;drafted.add(p.name);
+  var inp=document.getElementById("inp_"+sid);if(inp){inp.value=p.name;inp.className="slot-inp filled";}
+  hideAc(sid);
+  var row=document.getElementById("row_"+sid);
+  if(row){
+    var sp=row.querySelector("span[style]");
+    if(sp){
+      var btn=document.createElement("button");btn.className="slot-clr";btn.setAttribute("data-sid",sid);btn.textContent="x";
+      btn.addEventListener("click",function(){clearSlot(sid);});sp.parentNode.replaceChild(btn,sp);
+    }
+  }
+  saveTeam();save();doRecalc();setTimeout(refreshTeamPanels,50);
+}
+function clearSlot(sid){
+  var old=myTeam[sid];
+  if(old){var el=false;ROSTER_SLOTS.forEach(function(s){if(s.id!==sid&&myTeam[s.id]&&myTeam[s.id].name===old.name)el=true;});if(!el)drafted.delete(old.name);}
+  myTeam[sid]=null;
+  var inp=document.getElementById("inp_"+sid);if(inp){inp.value="";inp.className="slot-inp";}
+  var row=document.getElementById("row_"+sid);
+  if(row){
+    var btn=row.querySelector(".slot-clr[data-sid]");
+    if(btn){var sp=document.createElement("span");sp.style.width="18px";btn.parentNode.replaceChild(sp,btn);}
+  }
+  saveTeam();save();doRecalc();setTimeout(refreshTeamPanels,50);
+}
+
+/* ===== BUILD UI ===== */
+function buildUI(){
+  var tabsEl=document.getElementById("tabs"),contEl=document.getElementById("contents");
+  var r=recalc();renderRepl(r);prevRepl=Object.assign({},r);
+  TABS.forEach(function(tab){
+    var t=document.createElement("div");
+    t.className="tab"+(tab==="Board"?" active":"");t.id="tbtn_"+tab;
+    var cnt=tab==="Team"?"":' <span class="cnt">('+tabPlayers(tab,players).length+')</span>';
+    t.innerHTML=TL[tab]+cnt;
+    t.onclick=(function(tb){return function(){switchTab(tb);};})(tab);
+    tabsEl.appendChild(t);
+    var d=document.createElement("div");
+    d.className="tab-content"+(tab==="Board"?" active":"");d.id="tcont_"+tab;
+    if(tab==="Team"){d.innerHTML=buildTeamTab();}
+    else{d.innerHTML='<div class="table-wrap">'+buildTable(tab)+'</div>';}
+    contEl.appendChild(d);
+  });
+  attachTeamEvents();
+}
+function switchTab(tab){
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
+  document.querySelectorAll(".tab-content").forEach(function(c){c.classList.remove("active");});
+  document.getElementById("tbtn_"+tab).classList.add("active");
+  document.getElementById("tcont_"+tab).classList.add("active");
+  if(tab==="Team"){setTimeout(function(){refreshTeamPanels();attachTeamEvents();},10);}
+  else{applyFilter();}
+}
+
 buildUI();
 drafted.forEach(function(name){
-  var escaped=name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-  document.querySelectorAll('[data-name="'+escaped+'"]').forEach(function(r){
+  var esc=name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  document.querySelectorAll('[data-name="'+esc+'"]').forEach(function(r){
     r.classList.add("drafted");var b=r.querySelector(".db");if(b)b.textContent="Undo";
   });
 });
 save();
 </script>
-
 </body>
 </html>
