@@ -323,17 +323,43 @@ document.getElementById(“ac”).textContent=TOTAL-drafted.size;
 
 function buildUI(){
 const tabsEl=document.getElementById(“tabs”),contEl=document.getElementById(“contents”);
-const repl=recalcAllAdjZ();renderReplBar(repl);prevRepl={…repl};
+const dbg=document.createElement(“div”);
+dbg.id=“dbg”;dbg.style=“color:#3ddc84;padding:10px;font-size:11px;font-family:monospace;”;
+contEl.appendChild(dbg);
+function log(msg){dbg.innerHTML+=msg+”<br>”;console.log(msg);}
+
+try{log(“Step 1: recalcAllAdjZ…”);const repl=recalcAllAdjZ();log(“Step 1 OK: repl=”+JSON.stringify(repl).slice(0,80));renderReplBar(repl);prevRepl={…repl};}
+catch(e){dbg.style.color=”#ff5c5c”;dbg.innerHTML+=“FAIL Step 1: “+e.message+”<br>”+e.stack;return;}
+
+try{log(“Step 2: players count=”+players.length);log(“Step 2: first player=”+players[0].name);}
+catch(e){dbg.style.color=”#ff5c5c”;dbg.innerHTML+=“FAIL Step 2: “+e.message;return;}
+
+try{log(“Step 3: getTabPlayers Board count=”+getTabPlayers(“Board”,players).length);}
+catch(e){dbg.style.color=”#ff5c5c”;dbg.innerHTML+=“FAIL Step 3: “+e.message;return;}
+
+try{log(“Step 4: buildTable Board…”);const t=buildTable(“Board”);log(“Step 4 OK: table HTML length=”+t.length);}
+catch(e){dbg.style.color=”#ff5c5c”;dbg.innerHTML+=“FAIL Step 4 (buildTable): “+e.message+”<br>”+e.stack;return;}
+
+try{
+log(“Step 5: building tabs…”);
 TABS.forEach(tab=>{
+log(”  Building tab: “+tab);
 const t=document.createElement(“div”);
-t.className=“tab”+(tab===“Board”?” active”:””);t.id=`tbtn_${tab}`;
-t.innerHTML=`${TAB_LABELS[tab]}<span class="cnt">(${getTabPlayers(tab,players).length})</span>`;
+t.className=“tab”+(tab===“Board”?” active”:””);t.id=“tbtn_”+tab;
+t.innerHTML=TAB_LABELS[tab]+’<span class="cnt">(’+getTabPlayers(tab,players).length+’)</span>’;
 t.onclick=()=>switchTab(tab);tabsEl.appendChild(t);
 const d=document.createElement(“div”);
-d.className=“tab-content”+(tab===“Board”?” active”:””);d.id=`tcont_${tab}`;
-d.innerHTML=`<div class="table-wrap">${buildTable(tab)}</div>`;
+d.className=“tab-content”+(tab===“Board”?” active”:””);d.id=“tcont_”+tab;
+log(”  Building table HTML for: “+tab);
+const tableHTML=buildTable(tab);
+log(”  Table HTML length: “+tableHTML.length);
+d.innerHTML=’<div class="table-wrap">’+tableHTML+’</div>’;
 contEl.appendChild(d);
+log(”  Tab “+tab+” done”);
 });
+log(“Step 5 complete!”);
+dbg.remove();
+}catch(e){dbg.style.color=”#ff5c5c”;dbg.innerHTML+=“FAIL Step 5: “+e.message+”<br>”+e.stack;}
 }
 
 function switchTab(tab){
