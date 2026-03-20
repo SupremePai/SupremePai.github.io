@@ -377,6 +377,7 @@ th.closest(“thead”).querySelectorAll(“th”).forEach(h=>h.classList.remove
 th.classList.add(dir===“desc”?“sort-desc”:“sort-asc”);
 }
 
+try {
 buildUI();
 drafted.forEach(name=>{
 document.querySelectorAll(`tr[data-name="${name.replace(/"/g,"&quot;")}"]`).forEach(r=>{
@@ -384,6 +385,12 @@ r.classList.add(“drafted”);const b=r.querySelector(”.draft-btn”);if(b)b.
 });
 });
 saveState();
+} catch(err) {
+document.getElementById(“contents”).innerHTML =
+‘<div style="color:#ff5c5c;padding:40px;font-size:14px;font-family:monospace;">’ +
+‘<b>JavaScript Error:</b><br><br>’ + err.message + ‘<br><br>’ + err.stack + ‘</div>’;
+console.error(err);
+}
 </script>
 
 </body>
