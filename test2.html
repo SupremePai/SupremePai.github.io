@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+<div id="out">Loading...</div>
+<script type="application/json" id="jd">{"Board": [{"name": "Shohei Ohtani", "team": "LAD", "norm": "shohei ohtani", "pa": 658, "hr": 44, "r": 120, "rbi": 99, "sb": 22, "obp": 0.38, "z_hr": 3.58, "z_r": 3.24, "z_rbi": 2.35, "z_sb": 1.77, "z_obp": 2.55, "z_raw": 13.48, "elig": "DH/SP", "primary": "DH", "espn": 1, "repl_z": 1.625, "z_adj": 11.85, "type": "H", "rank": 1, "k": 0, "era": 0, "whip": 0, "qs": 0, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0, "z_era": 0, "z_whip": 0, "z_qs": 0, "z_svhld": 0, "overall_rank": 1}, {"name": "Aaron Judge", "team": "NYY", "norm": "aaron judge", "pa": 633, "hr": 42, "r": 109, "rbi": 102, "sb": 9, "obp": 0.415, "z_hr": 3.33, "z_r": 2.69, "z_rbi": 2.5, "z_sb": 0.06, "z_obp": 4.17, "z_raw": 12.74, "elig": "RF", "primary": "RF", "espn": 2, "repl_z": 1.59, "z_adj": 11.15, "type": "H", "rank": 2, "k": 0, "era": 0, "whip": 0, "qs": 0, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0, "z_era": 0, "z_whip": 0, "z_qs": 0, "z_svhld": 0, "overall_rank": 2}, {"name": "Juan Soto", "team": "NYM", "norm": "juan soto", "pa": 621, "hr": 34, "r": 105, "rbi": 89, "sb": 20, "obp": 0.413, "z_hr": 2.33, "z_r": 2.49, "z_rbi": 1.83, "z_sb": 1.51, "z_obp": 4.07, "z_raw": 12.23, "elig": "RF", "primary": "RF", "espn": 5, "repl_z": 1.59, "z_adj": 10.64, "type": "H", "rank": 3, "k": 0, "era": 0, "whip": 0, "qs": 0, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0, "z_era": 0, "z_whip": 0, "z_qs": 0, "z_svhld": 0, "overall_rank": 3}, {"rank": 1, "name": "Tarik Skubal", "team": "DET", "elig": "SP", "primary": "SP", "espn": 10, "k": 243, "era": 2.79, "whip": 1.01, "qs": 23, "sv": 0, "hld": 0, "svhld": 0, "z_k": 3.05, "z_era": 2.44, "z_whip": 3.21, "z_qs": 2.77, "z_svhld": 0.0, "z_raw": 11.47, "z_adj": 9.65, "repl_z": 1.82, "type": "P", "pa": 0, "hr": 0, "r": 0, "rbi": 0, "sb": 0, "obp": 0, "z_hr": 0, "z_r": 0, "z_rbi": 0, "z_sb": 0, "z_obp": 0, "overall_rank": 4}, {"name": "Ronald Acu\u00f1a Jr.", "team": "ATL", "norm": "ronald acuna jr", "pa": 676, "hr": 31, "r": 109, "rbi": 84, "sb": 24, "obp": 0.388, "z_hr": 1.95, "z_r": 2.69, "z_rbi": 1.58, "z_sb": 2.03, "z_obp": 2.92, "z_raw": 11.18, "elig": "RF", "primary": "RF", "espn": 7, "repl_z": 1.59, "z_adj": 9.59, "type": "H", "rank": 4, "k": 0, "era": 0, "whip": 0, "qs": 0, "sv": 0, "hld": 0, "svhld": 0, "z_k": 0, "z_era": 0, "z_whip": 0, "z_qs": 0, "z_svhld": 0, "overall_rank": 5}]}</script>
+<script>
+try {
+  var data = JSON.parse(document.getElementById("jd").textContent);
+  document.getElementById("out").textContent = "Data loaded! Players: " + data.Board.length + " | First: " + data.Board[0].name;
+} catch(e) {
+  document.getElementById("out").textContent = "ERROR: " + e.message;
+}
+</script>
+</body>
+</html>
