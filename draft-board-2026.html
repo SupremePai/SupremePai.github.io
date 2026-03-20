@@ -443,9 +443,9 @@ var SLOT_DEPTH={C:2,SS:2,"2B":3,"3B":3,"1B":3,LF:4,CF:4,RF:4,SP:4,RP:3,OF:5,UTIL
 var URGENCY_SCALE=0.6;
 
 function getUnfilledSlots(){
-  // Returns map of slotId -> slot for all unfilled slots
+  // Returns map of slotId -> slot for all unfilled NON-BENCH slots
   var out={};
-  ROSTER_SLOTS.forEach(function(s){if(!myTeam[s.id])out[s.id]=s;});
+  ROSTER_SLOTS.forEach(function(s){if(!myTeam[s.id]&&!s.bench)out[s.id]=s;});
   return out;
 }
 function getPositionalUrgency(){
@@ -453,9 +453,9 @@ function getPositionalUrgency(){
   // Returns map: pos -> urgency score (0 if fully filled)
   var unfilled=getUnfilledSlots();
   var filled=teamPlayers().length;
-  var totalSlots=ROSTER_SLOTS.length;
-  // Scale urgency 0->1 as draft progresses (0 at start, 1 near end)
-  var draftProgress=filled/totalSlots;
+  var nonBenchSlots=ROSTER_SLOTS.filter(function(s){return !s.bench;}).length;
+  // Scale urgency 0->1 as non-bench slots fill up
+  var draftProgress=Math.min(filled/nonBenchSlots,1.0);
   var urgencyMult=draftProgress*URGENCY_SCALE;
 
   var posNeed={};
