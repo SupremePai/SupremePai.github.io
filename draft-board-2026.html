@@ -583,6 +583,9 @@ function pickSlot(sid,name){
   myTeam[sid]=p;drafted.add(p.name);
   var inp=document.getElementById("inp_"+sid);if(inp){inp.value=p.name;inp.className="slot-inp filled";}
   hideAc(sid);
+  // Visually cross off on all board tabs
+  var pesc=p.name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  document.querySelectorAll('[data-name="'+pesc+'"]').forEach(function(r){r.classList.add("drafted");var b=r.querySelector(".db");if(b)b.textContent="Undo";});
   var row=document.getElementById("row_"+sid);
   if(row){
     var sp=row.querySelector("span[style]");
@@ -598,6 +601,11 @@ function clearSlot(sid){
   if(old){var el=false;ROSTER_SLOTS.forEach(function(s){if(s.id!==sid&&myTeam[s.id]&&myTeam[s.id].name===old.name)el=true;});if(!el)drafted.delete(old.name);}
   myTeam[sid]=null;
   var inp=document.getElementById("inp_"+sid);if(inp){inp.value="";inp.className="slot-inp";}
+  // Visually un-cross if no longer drafted
+  if(old){
+    var oesc=old.name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+    document.querySelectorAll('[data-name="'+oesc+'"]').forEach(function(r){r.classList.remove("drafted");var b=r.querySelector(".db");if(b)b.textContent="Draft";});
+  }
   var row=document.getElementById("row_"+sid);
   if(row){
     var btn=row.querySelector(".slot-clr[data-sid]");
