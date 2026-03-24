@@ -22,8 +22,8 @@
 
     --merkulio: #6db88a;
     --merkulio-glow: rgba(109,184,138,0.12);
-    --kulanai: #d47eb8;
-    --kulanai-glow: rgba(212,126,184,0.12);
+    --zulanai: #d47eb8;
+    --zulanai-glow: rgba(212,126,184,0.12);
     --veln: #7eb8d4;
     --veln-glow: rgba(126,184,212,0.12);
     --arshqqam: #d4a87e;
@@ -166,10 +166,10 @@
   th.col-merkulio .char-header::after { background: var(--merkulio); opacity: 0.4; }
   th.col-merkulio .char-name { color: var(--merkulio); }
 
-  /* Kulanai */
-  th.col-kulanai .char-header { background: var(--kulanai-glow); }
-  th.col-kulanai .char-header::after { background: var(--kulanai); opacity: 0.4; }
-  th.col-kulanai .char-name { color: var(--kulanai); }
+  /* zulanai */
+  th.col-zulanai .char-header { background: var(--zulanai-glow); }
+  th.col-zulanai .char-header::after { background: var(--zulanai); opacity: 0.4; }
+  th.col-zulanai .char-name { color: var(--zulanai); }
 
   /* Vel'n */
   th.col-veln .char-header { background: var(--veln-glow); }
@@ -281,9 +281,9 @@
   td.col-merkulio .val.nonzero { color: var(--merkulio); }
   td.col-merkulio .btn:hover { color: var(--merkulio); }
 
-  td.col-kulanai .counter:hover { border-color: var(--kulanai); box-shadow: 0 0 8px var(--kulanai-glow); }
-  td.col-kulanai .val.nonzero { color: var(--kulanai); }
-  td.col-kulanai .btn:hover { color: var(--kulanai); }
+  td.col-zulanai .counter:hover { border-color: var(--zulanai); box-shadow: 0 0 8px var(--zulanai-glow); }
+  td.col-zulanai .val.nonzero { color: var(--zulanai); }
+  td.col-zulanai .btn:hover { color: var(--zulanai); }
 
   td.col-veln .counter:hover { border-color: var(--veln); box-shadow: 0 0 8px var(--veln-glow); }
   td.col-veln .val.nonzero { color: var(--veln); }
@@ -398,10 +398,10 @@
               <span class="char-path">Agent · Thief</span>
             </div>
           </th>
-          <th class="col-kulanai">
+          <th class="col-zulanai">
             <div class="char-header">
               <span class="char-icon">🔮</span>
-              <span class="char-name">Kulanai</span>
+              <span class="char-name">zulanai</span>
               <span class="char-path">Agent · Investigator</span>
             </div>
           </th>
@@ -455,14 +455,14 @@ const IDEALS = [
 
 const CHARS = [
   { key: 'merkulio',  cls: 'col-merkulio' },
-  { key: 'kulanai',   cls: 'col-kulanai' },
+  { key: 'zulanai',   cls: 'col-zulanai' },
   { key: 'veln',      cls: 'col-veln' },
   { key: 'arshqqam',  cls: 'col-arshqqam' },
 ];
 
 const DEFAULTS = {
   merkulio:  { freedom:0, justice:1, potential:1, protection:1, remembrance:1, secrecy:1, selfmastery:1, tenacity:1, truth:0, currentideal:0 },
-  kulanai:   { freedom:0, justice:0, potential:0, protection:0, remembrance:2, secrecy:0, selfmastery:1, tenacity:0, truth:3, currentideal:0 },
+  zulanai:   { freedom:0, justice:0, potential:0, protection:0, remembrance:2, secrecy:0, selfmastery:1, tenacity:0, truth:3, currentideal:0 },
   veln:      { freedom:1, justice:1, potential:1, protection:1, remembrance:2, secrecy:0, selfmastery:0, tenacity:0, truth:0, currentideal:0 },
   arshqqam:  { freedom:0, justice:1, potential:4, protection:2, remembrance:0, secrecy:1, selfmastery:1, tenacity:2, truth:0, currentideal:0 },
 };
