@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nacho Rankings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --surface2: #f3ede3;
+    --border: #e0d8cc;
+    --accent: #c24b1a;
+    --accent-light: #f5e8e0;
+    --gold: #b07d2a;
+    --gold-light: #fdf3dc;
+    --text: #1a1612;
+    --muted: #7a6f63;
+    --muted2: #a89f94;
+    --star-on: #c24b1a;
+    --star-off: #ddd5c8;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .site-header {
+    background: var(--text);
+    color: #fff;
+    padding: 28px 0 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 20px,
+      rgba(255,255,255,0.02) 20px,
+      rgba(255,255,255,0.02) 21px
+    );
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .site-header h1 span { color: var(--accent); }
+  .site-header p {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    position: relative;
+  }
+
+  /* Layout */
+  .container { max-width: 820px; margin: 0 auto; padding: 32px 20px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .stat-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .stat-card .val { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text); }
+  .stat-card .val.sm { font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 500; padding-top: 4px; }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.on { background: var(--text); color: #fff; border-color: var(--text); }
+
+  .add-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 9px 20px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .add-btn:hover { background: #a83d12; }
+
+  /* Form */
+  .form-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    animation: slideIn 0.2s ease;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .field input, .field select, .field textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+  .field textarea { height: 64px; resize: vertical; }
+
+  /* Criteria rating */
+  .criteria-wrap { grid-column: 1 / -1; margin-top: 4px; }
+  .criteria-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .criteria-header span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .weights-toggle {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: underline;
+  }
+
+  .crit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--surface2);
+  }
+  .crit-row:last-child { border-bottom: none; }
+  .crit-label { font-size: 13px; color: var(--text); flex: 1; }
+  .crit-weight-badge {
+    font-size: 10px;
+    color: var(--muted2);
+    background: var(--surface2);
+    border-radius: 999px;
+    padding: 2px 8px;
+    min-width: 36px;
+    text-align: center;
+  }
+  .stars-row { display: flex; gap: 3px; }
+  .star {
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--star-off);
+    line-height: 1;
+    transition: color 0.1s, transform 0.1s;
+    user-select: none;
+  }
+  .star:hover { transform: scale(1.15); }
+  .star.lit { color: var(--star-on); }
+
+  /* Weights panel */
+  .weights-panel {
+    background: var(--surface2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-top: 12px;
+    grid-column: 1 / -1;
+  }
+  .w-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+  .w-row:last-child { margin-bottom: 0; }
+  .w-label { flex: 1; color: var(--text); }
+  .w-row input[type=range] { flex: 2; accent-color: var(--accent); }
+  .w-val { min-width: 34px; text-align: right; color: var(--muted); font-size: 11px; }
+
+  .form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .cancel-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .save-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 9px 22px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .save-btn:hover { background: #a83d12; }
+  .save-btn:disabled { background: var(--muted2); cursor: not-allowed; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+    animation: fadeUp 0.25s ease;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+
+  .card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+  .rank-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--border);
+    line-height: 1;
+    min-width: 36px;
+  }
+  .rank-num.top { color: var(--gold); }
+  .card-info { flex: 1; min-width: 0; }
+  .card-dish { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text); line-height: 1.2; }
+  .card-restaurant { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .score-pill {
+    background: var(--gold-light);
+    color: var(--gold);
+    border: 1px solid #e8d5a0;
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .del-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted2);
+    font-size: 16px;
+    padding: 0;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .del-btn:hover { color: var(--accent); }
+
+  .card-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .card-meta span { display: flex; align-items: center; gap: 4px; }
+
+  .crit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .crit-cell {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+  }
+  .crit-cell-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .crit-cell-stars { color: var(--star-on); font-size: 12px; letter-spacing: 1px; }
+
+  .card-notes {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    border-left: 2px solid var(--accent-light);
+    padding-left: 10px;
+    line-height: 1.5;
+  }
+
+  .cat-badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .cat-nachos { background: #fde8dc; color: #8b3215; }
+  .cat-tacos  { background: #dcf0e0; color: #1a5c2a; }
+  .cat-other  { background: #e8e0f5; color: #3d2a6e; }
+
+  /* Empty / loading states */
+  .state-msg {
+    text-align: center;
+    padding: 48px 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .state-msg .icon { font-size: 32px; margin-bottom: 10px; display: block; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--text);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.err { background: var(--accent); }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: 1; }
+    .criteria-wrap { grid-column: 1; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stats-bar .stat-card:last-child { grid-column: 1 / -1; }
+    .crit-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>Nacho <span>Rankings</span></h1>
+  <p>A scientific, ongoing study</p>
+</div>
+
+<div class="container">
+  <div id="stats-bar" class="stats-bar" style="display:none"></div>
+
+  <div class="toolbar">
+    <div class="filters" id="filters">
+      <button class="chip on" data-f="all">All</button>
+      <button class="chip" data-f="nachos">Nachos</button>
+      <button class="chip" data-f="tacos">Tacos</button>
+      <button class="chip" data-f="other">Other</button>
+    </div>
+    <button class="add-btn" id="add-btn">+ Add entry</button>
+  </div>
+
+  <div id="form-wrap"></div>
+  <div id="list"><div class="state-msg"><span class="icon">⏳</span>Loading...</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://yebunkxcgyezsxpcgern.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ie0DrRA1KwO6rTMqa0LsBA_MBDPXVbi';
+const TABLE = 'nachos';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── CRITERIA & WEIGHTS ──────────────────────────────────────────────────────
+const CRIT = [
+  { id: 'meat_q',  col: 'meat_q',  label: 'Meat quality',    w: 30 },
+  { id: 'topping', col: 'topping', label: 'Topping ratio',   w: 25 },
+  { id: 'portion', col: 'portion', label: 'Portion size',    w: 20 },
+  { id: 'salsa',   col: 'salsa',   label: 'Side salsa',      w: 15 },
+  { id: 'value',   col: 'value',   label: 'Value for price', w: 10 },
+];
+
+let weights  = JSON.parse(localStorage.getItem('nr-weights') || 'null') || Object.fromEntries(CRIT.map(c=>[c.id,c.w]));
+let stars    = Object.fromEntries(CRIT.map(c=>[c.id,0]));
+let showForm = false;
+let showW    = false;
+let filter   = 'all';
+let entries  = [];
+
+// ── SCORING ─────────────────────────────────────────────────────────────────
+function score(e) {
+  const tot = Object.values(weights).reduce((a,b)=>a+b,0);
+  return CRIT.reduce((s,c) => s + (e[c.col]||0) * (weights[c.id]/tot), 0);
+}
+
+// ── SUPABASE ─────────────────────────────────────────────────────────────────
+async function loadEntries() {
+  const { data, error } = await db.from(TABLE).select('*').order('created_at', { ascending: false });
+  if (error) { toast('Failed to load entries', true); return; }
+  entries = data || [];
+  renderStats();
+  renderList();
+}
+
+async function insertEntry(entry) {
+  const { error } = await db.from(TABLE).insert([entry]);
+  if (error) { toast('Failed to save entry', true); return false; }
+  return true;
+}
+
+async function deleteEntry(id) {
+  const { error } = await db.from(TABLE).delete().eq('id', id);
+  if (error) { toast('Failed to delete entry', true); return; }
+  entries = entries.filter(e => e.id !== id);
+  renderStats();
+  renderList();
+  toast('Entry removed');
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function toast(msg, err=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (err ? ' err' : '');
+  setTimeout(() => el.className = 'toast', 2800);
+}
+
+// ── STARS ────────────────────────────────────────────────────────────────────
+function setStar(cid, val) {
+  stars[cid] = val;
+  document.querySelectorAll(`.star[data-c="${cid}"]`).forEach(el => {
+    el.classList.toggle('lit', parseInt(el.dataset.v) <= val);
+  });
+}
+
+function bindStars() {
+  document.querySelectorAll('.star').forEach(el => {
+    el.addEventListener('click', () => setStar(el.dataset.c, parseInt(el.dataset.v)));
+  });
+}
+
+// ── WEIGHTS ───────────────────────────────────────────────────────────────────
+function bindWeights() {
+  CRIT.forEach(c => {
+    const input = document.getElementById('w-' + c.id);
+    if (!input) return;
+    input.addEventListener('input', () => {
+      weights[c.id] = parseInt(input.value);
+      localStorage.setItem('nr-weights', JSON.stringify(weights));
+      document.getElementById('wv-' + c.id).textContent = weights[c.id] + '%';
+    });
+  });
+}
+
+// ── FORM ─────────────────────────────────────────────────────────────────────
+function starsRowHtml(cid) {
+  return [1,2,3,4,5].map(v =>
+    `<span class="star${stars[cid]>=v?' lit':''}" data-c="${cid}" data-v="${v}">★</span>`
+  ).join('');
+}
+
+function renderForm() {
+  const wrap = document.getElementById('form-wrap');
+  if (!showForm) { wrap.innerHTML = ''; return; }
+
+  const weightsHtml = showW ? `
+    <div class="weights-panel">
+      ${CRIT.map(c=>`
+        <div class="w-row">
+          <span class="w-label">${c.label}</span>
+          <input type="range" id="w-${c.id}" min="0" max="100" step="5" value="${weights[c.id]}">
+          <span class="w-val" id="wv-${c.id}">${weights[c.id]}%</span>
+        </div>`).join('')}
+    </div>` : '';
+
+  wrap.innerHTML = `
+    <div class="form-panel">
+      <div class="form-title">New entry</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Restaurant name</label>
+          <input type="text" id="f-rest" placeholder="e.g. El Charro">
+        </div>
+        <div class="field">
+          <label>Dish name</label>
+          <input type="text" id="f-dish" placeholder="e.g. House Nachos">
+        </div>
+        <div class="field">
+          <label>Meat type</label>
+          <input type="text" id="f-meat" placeholder="e.g. Carne asada">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="f-cat">
+            <option value="nachos">Nachos</option>
+            <option value="tacos">Tacos</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Date visited</label>
+          <input type="date" id="f-date" value="${new Date().toISOString().split('T')[0]}">
+        </div>
+        <div class="field full criteria-wrap">
+          <div class="criteria-header">
+            <span>Rate each criterion</span>
+            <button class="weights-toggle" id="w-toggle">${showW ? 'Hide weights' : 'Adjust weights'}</button>
+          </div>
+          ${CRIT.map(c=>`
+            <div class="crit-row">
+              <span class="crit-label">${c.label}</span>
+              <span class="crit-weight-badge">${weights[c.id]}%</span>
+              <div class="stars-row">${starsRowHtml(c.id)}</div>
+            </div>`).join('')}
+          ${weightsHtml}
+        </div>
+        <div class="field full">
+          <label>Notes</label>
+          <textarea id="f-notes" placeholder="Chip freshness, cheese pull, overall vibe..."></textarea>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="cancel-btn" id="cancel-btn">Cancel</button>
+        <button class="save-btn" id="save-btn">Save entry</button>
+      </div>
+    </div>`;
+
+  document.getElementById('cancel-btn').addEventListener('click', () => { showForm=false; stars=Object.fromEntries(CRIT.map(c=>[c.id,0])); renderForm(); });
+  document.getElementById('save-btn').addEventListener('click', submitEntry);
+  document.getElementById('w-toggle').addEventListener('click', () => { showW=!showW; renderForm(); });
+  bindStars();
+  bindWeights();
+}
+
+async function submitEntry() {
+  const dish = document.getElementById('f-dish').value.trim();
+  const rest = document.getElementById('f-rest').value.trim();
+  if (!dish || !rest) { toast('Please enter a dish name and restaurant', true); return; }
+  if (!CRIT.some(c=>stars[c.id]>0)) { toast('Please rate at least one criterion', true); return; }
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const entry = {
+    dish, restaurant: rest,
+    meat:  document.getElementById('f-meat').value.trim() || null,
+    cat:   document.getElementById('f-cat').value,
+    date:  document.getElementById('f-date').value || null,
+    notes: document.getElementById('f-notes').value.trim() || null,
+    ...Object.fromEntries(CRIT.map(c=>[c.col, stars[c.id] || null]))
+  };
+
+  const ok = await insertEntry(entry);
+  if (ok) {
+    showForm = false;
+    stars = Object.fromEntries(CRIT.map(c=>[c.id,0]));
+    renderForm();
+    await loadEntries();
+    toast('Entry saved!');
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'Save entry';
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function renderStats() {
+  const bar = document.getElementById('stats-bar');
+  if (!entries.length) { bar.style.display='none'; return; }
+  bar.style.display = 'grid';
+  const avg = (entries.reduce((s,e)=>s+score(e),0)/entries.length).toFixed(1);
+  const best = entries.slice().sort((a,b)=>score(b)-score(a))[0];
+  bar.innerHTML = `
+    <div class="stat-card"><div class="lbl">Spots visited</div><div class="val">${entries.length}</div></div>
+    <div class="stat-card"><div class="lbl">Avg score</div><div class="val">${avg}<span style="font-size:14px;color:var(--muted)"> / 5</span></div></div>
+    <div class="stat-card"><div class="lbl">Top spot</div><div class="val sm">${best.restaurant}</div></div>`;
+}
+
+// ── LIST ──────────────────────────────────────────────────────────────────────
+function starsDisplay(n) {
+  const full = Math.round(n||0);
+  return '★'.repeat(full) + '<span style="opacity:0.2">' + '★'.repeat(5-full) + '</span>';
+}
+
+function renderList() {
+  const el = document.getElementById('list');
+  const sorted = entries
+    .filter(e => filter==='all' || e.cat===filter)
+    .map(e => ({...e, _s: score(e)}))
+    .sort((a,b) => b._s - a._s);
+
+  if (!sorted.length) {
+    el.innerHTML = `<div class="state-msg"><span class="icon">🌮</span>No entries yet — add your first ranking above.</div>`;
+    return;
+  }
+
+  el.innerHTML = sorted.map((e,i) => {
+    const metaParts = [];
+    if (e.meat) metaParts.push(`<span>🥩 ${e.meat}</span>`);
+    if (e.date) metaParts.push(`<span>📅 ${new Date(e.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>`);
+    const catLabel = {nachos:'Nachos',tacos:'Tacos',other:'Other'}[e.cat]||e.cat;
+    const catClass = {nachos:'cat-nachos',tacos:'cat-tacos',other:'cat-other'}[e.cat]||'cat-other';
+
+    return `<div class="card">
+      <div class="card-top">
+        <div class="rank-num${i===0?' top':''}">${i+1}</div>
+        <div class="card-info">
+          <div class="card-dish">${e.dish}</div>
+          <div class="card-restaurant">${e.restaurant}</div>
+        </div>
+        <div class="score-pill">${e._s.toFixed(1)} / 5</div>
+        <button class="del-btn" data-id="${e.id}">✕</button>
+      </div>
+      <div class="card-meta">
+        ${metaParts.join('')}
+        <span><span class="cat-badge ${catClass}">${catLabel}</span></span>
+      </div>
+      <div class="crit-grid">
+        ${CRIT.filter(c=>e[c.col]>0).map(c=>`
+          <div class="crit-cell">
+            <div class="crit-cell-lbl">${c.label}</div>
+            <div class="crit-cell-stars">${starsDisplay(e[c.col])}</div>
+          </div>`).join('')}
+      </div>
+      ${e.notes ? `<div class="card-notes">${e.notes}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  el.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Remove this entry?')) deleteEntry(parseInt(btn.dataset.id));
+    });
+  });
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+document.getElementById('filters').addEventListener('click', e => {
+  if (!e.target.dataset.f) return;
+  filter = e.target.dataset.f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  e.target.classList.add('on');
+  renderList();
+});
+
+// ── ADD BUTTON ────────────────────────────────────────────────────────────────
+document.getElementById('add-btn').addEventListener('click', () => {
+  showForm = !showForm;
+  showW = false;
+  if (showForm) stars = Object.fromEntries(CRIT.map(c=>[c.id,0]));
+  renderForm();
+  document.getElementById('add-btn').textContent = showForm ? '✕ Close' : '+ Add entry';
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadEntries();
+</script>
+</body>
+</html>
