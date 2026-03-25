@@ -727,7 +727,7 @@ function buildTeamTab(){
 }
 function refreshTeamPanels(){
   var wrap=document.getElementById("tcont_Team");if(!wrap)return;
-  var sc=wrap.querySelector(".scorecard-panel");
+  var sc=wrap.querySelector(".sc-strip");
   var rc=wrap.querySelector(".recs-panel");
   function repl2(old,newHtml){if(!old)return;var d=document.createElement("div");d.innerHTML=newHtml;old.parentNode.replaceChild(d.firstChild,old);}
   repl2(sc,buildScorecard());repl2(rc,buildRecs());
