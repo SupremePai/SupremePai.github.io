@@ -136,9 +136,81 @@
 <div id="contents"></div>
 
 <script>
-fetch('players.json')
-  .then(function(r){return r.json();})
-  .then(function(RAW){
+// Add projection file paths here to include more systems (they will be averaged)
+var PROJ_FILES=['data/steamer.json'];
+
+function normName(n){return(n||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();}
+
+Promise.all(
+  [fetch('data/espn-adp.json').then(function(r){return r.json();})]
+  .concat(PROJ_FILES.map(function(f){return fetch(f).then(function(r){return r.json();});}))
+)
+.then(function(results){
+var espnList=results[0];
+var projSets=results.slice(1);
+
+// Build ESPN lookup by normalized name
+var espnMap={};
+espnList.forEach(function(e){if(e.espn>0)espnMap[normName(e.name)]=e.espn;});
+
+// Merge all projection sets, averaging stats for players appearing in multiple systems
+var H_STATS=['pa','hr','r','rbi','sb','obp'];
+var P_STATS=['k','era','whip','qs','sv','hld'];
+var playerMap={};
+
+projSets.forEach(function(proj){
+  proj.forEach(function(p){
+    var key=normName(p.name);
+    if(!playerMap[key]){
+      playerMap[key]={name:p.name,team:p.team,elig:p.elig,primary:p.primary,type:p.type,_n:0};
+      H_STATS.concat(P_STATS).forEach(function(s){playerMap[key][s]=0;});
+    }
+    var mp=playerMap[key];
+    mp._n++;
+    (p.type==='H'?H_STATS:P_STATS).forEach(function(s){if(p[s]!=null)mp[s]+=(+p[s]||0);});
+  });
+});
+
+// Average stats and attach ESPN rank
+var merged=Object.keys(playerMap).map(function(key){
+  var p=playerMap[key];
+  var n=p._n;
+  H_STATS.concat(P_STATS).forEach(function(s){p[s]=Math.round((p[s]/n)*1000)/1000;});
+  p.svhld=Math.round((p.sv+(p.hld||0)*0.95)*100)/100;
+  p.espn=espnMap[key]||0;
+  delete p._n;
+  return p;
+});
+
+// Compute z-scores from averaged stats
+(function(){
+  var hitters=merged.filter(function(p){return p.type==='H';});
+  var pitchers=merged.filter(function(p){return p.type==='P';});
+  function zs(arr,key){
+    var vals=arr.map(function(p){return p[key]||0;});
+    var mean=vals.reduce(function(a,b){return a+b;},0)/(vals.length||1);
+    var std=Math.sqrt(vals.reduce(function(a,v){return a+(v-mean)*(v-mean);},0)/(vals.length||1))||1;
+    return{mean:mean,std:std};
+  }
+  var hs={hr:zs(hitters,'hr'),r:zs(hitters,'r'),rbi:zs(hitters,'rbi'),sb:zs(hitters,'sb'),obp:zs(hitters,'obp')};
+  var ps={k:zs(pitchers,'k'),era:zs(pitchers,'era'),whip:zs(pitchers,'whip'),qs:zs(pitchers,'qs'),svhld:zs(pitchers,'svhld')};
+  hitters.forEach(function(p){
+    p.z_hr=Math.round(((p.hr-hs.hr.mean)/hs.hr.std)*100)/100;
+    p.z_r=Math.round(((p.r-hs.r.mean)/hs.r.std)*100)/100;
+    p.z_rbi=Math.round(((p.rbi-hs.rbi.mean)/hs.rbi.std)*100)/100;
+    p.z_sb=Math.round(((p.sb-hs.sb.mean)/hs.sb.std)*100)/100;
+    p.z_obp=Math.round(((p.obp-hs.obp.mean)/hs.obp.std)*100)/100;
+    p.z_raw=Math.round((p.z_hr+p.z_r+p.z_rbi+p.z_sb+p.z_obp)*100)/100;
+  });
+  pitchers.forEach(function(p){
+    p.z_k=Math.round(((p.k-ps.k.mean)/ps.k.std)*100)/100;
+    p.z_era=Math.round((-(p.era-ps.era.mean)/ps.era.std)*100)/100;
+    p.z_whip=Math.round((-(p.whip-ps.whip.mean)/ps.whip.std)*100)/100;
+    p.z_qs=Math.round(((p.qs-ps.qs.mean)/ps.qs.std)*100)/100;
+    p.z_svhld=Math.round(((p.svhld-ps.svhld.mean)/ps.svhld.std)*100)/100;
+    p.z_raw=Math.round((p.z_k+p.z_era+p.z_whip+p.z_qs+p.z_svhld)*100)/100;
+  });
+})();
 
 var TOTAL=400;
 var OF_BLEND=0.5,OF_SLOTS=48;
@@ -150,7 +222,7 @@ var HC=[["PA","pa"],["R","r"],["HR","hr"],["RBI","rbi"],["SB","sb"],["OBP","obp"
 var PC=[["K","k"],["ERA","era"],["WHIP","whip"],["QS","qs"],["SV+HLD","svhld"],["zK","z_k"],["zERA","z_era"],["zWHIP","z_whip"],["zQS","z_qs"],["zSVHLD","z_svhld"]];
 var RC={C:"#f5c842",SS:"#ff8080","2B":"#7ab8f5","3B":"#7af57a","1B":"#7af5c0",LF:"#c07af5",CF:"#f5d07a",RF:"#f57ac0",SP:"#7aaaf5",RP:"#f57a7a"};
 
-var players=RAW.Board.map(function(p){return Object.assign({},p);});
+var players=merged;
 var drafted=new Set(JSON.parse(localStorage.getItem("fb26")||"[]"));
 var sortState={},prevRepl={};
 
