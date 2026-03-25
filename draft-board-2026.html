@@ -120,7 +120,7 @@
 <div class="header">
   <div>
     <h1>&#9968; Fantasy Baseball Draft Board 2026 <span class="live-badge">&#9889; LIVE SCARCITY</span></h1>
-    <div class="sub">10-Team &middot; R HR RBI SB(bonus) OBP &middot; K ERA WHIP QS SV+HLD(bonus x0.85) &middot; Blended OF &middot; Top 400 &middot; ESPN verified</div>
+    <div class="sub">10-Team &middot; R HR RBI SB(bonus) OBP &middot; K ERA WHIP QS SV+HLD(bonus x0.95) &middot; Blended OF &middot; Top 400 &middot; ESPN verified</div>
   </div>
   <div class="hstats">Drafted: <b id="dc">0</b>&nbsp;|&nbsp;Available: <b id="ac">400</b>
     <span class="recalc-indicator" id="ri">Recalculated</span>
@@ -146,7 +146,7 @@ var PS={C:13,"1B":19,"2B":19,"3B":19,SS:19,LF:14,CF:14,RF:14,SP:57,RP:37};
 var PH=["C","SS","2B","3B","1B","LF","CF","RF","OF","DH"];
 var TABS=["Board","C","1B","2B","3B","SS","LF","CF","RF","SP","RP","Team"];
 var TL={"Board":"All","C":"C","1B":"1B","2B":"2B","3B":"3B","SS":"SS","LF":"LF","CF":"CF","RF":"RF","SP":"SP","RP":"RP","Team":"My Team"};
-var HC=[["PA","pa"],["HR","hr"],["R","r"],["RBI","rbi"],["SB","sb"],["OBP","obp"],["zHR","z_hr"],["zR","z_r"],["zRBI","z_rbi"],["zSB","z_sb"],["zOBP","z_obp"]];
+var HC=[["PA","pa"],["R","r"],["HR","hr"],["RBI","rbi"],["SB","sb"],["OBP","obp"],["zR","z_r"],["zHR","z_hr"],["zRBI","z_rbi"],["zSB","z_sb"],["zOBP","z_obp"]];
 var PC=[["K","k"],["ERA","era"],["WHIP","whip"],["QS","qs"],["SV+HLD","svhld"],["zK","z_k"],["zERA","z_era"],["zWHIP","z_whip"],["zQS","z_qs"],["zSVHLD","z_svhld"]];
 var RC={C:"#f5c842",SS:"#ff8080","2B":"#7ab8f5","3B":"#7af57a","1B":"#7af5c0",LF:"#c07af5",CF:"#f5d07a",RF:"#f57ac0",SP:"#7aaaf5",RP:"#f57a7a"};
 
@@ -217,7 +217,7 @@ function fv(v,k){
 function buildRow(p,tab){
   var isH=p.type==="H"||["C","1B","2B","3B","SS","LF","CF","RF"].indexOf(tab)>=0;
   var isB=tab==="Board";
-  var rv=isB?p.overall_rank:(p["rank_"+tab]||"-");
+  var rv=isB?p.overall_rank:p.overall_rank;
   var dn=p.name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   var r='<tr class="'+(drafted.has(p.name)?"drafted":"")+'" data-name="'+dn+'">';
   r+='<td class="rank-cell left">'+rv+'</td>';
@@ -232,7 +232,7 @@ function buildRow(p,tab){
     var k=c[1],h=c[0];
     var isZ=["zHR","zR","zRBI","zSB","zOBP","zK","zERA","zWHIP","zQS","zSVHLD"].indexOf(h)>=0;
     if(isB){
-      var isHc=["zHR","zR","zRBI","zSB","zOBP","PA","HR","R","RBI","SB","OBP"].indexOf(h)>=0;
+      var isHc=["zR","zHR","zRBI","zSB","zOBP","PA","R","HR","RBI","SB","OBP"].indexOf(h)>=0;
       var isPc=["zK","zERA","zWHIP","zQS","zSVHLD","K","ERA","WHIP","QS","SV+HLD"].indexOf(h)>=0;
       if(isHc&&!isH){r+='<td style="color:var(--border)">-</td>';return;}
       if(isPc&&isH){r+='<td style="color:var(--border)">-</td>';return;}
@@ -283,7 +283,7 @@ function liveUpdate(old){
       for(var i=0;i<players.length;i++){if(players[i].name===name){p=players[i];break;}}
       if(!p)return;
       var cells=row.children;
-      cells[0].textContent=isB?p.overall_rank:(p["rank_"+tab]||"-");
+      cells[0].textContent=p.overall_rank;
       var adjCell=cells[cells.length-2],replCell=cells[cells.length-3];
       if(replCell)replCell.textContent=p.repl_z.toFixed(2);
       if(adjCell){
