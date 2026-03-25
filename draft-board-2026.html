@@ -856,6 +856,12 @@ function switchTab(tab){
   else{applyFilter();}
 }
 
+// Expose functions referenced by inline HTML event handlers to global scope
+window.toggle=toggle;
+window.undraftAll=undraftAll;
+window.applyFilter=applyFilter;
+window.sortCol=sortCol;
+
 buildUI();
 drafted.forEach(function(name){
   var esc=name.replace(/"/g,"&quot;").replace(/'/g,"&#39;");
