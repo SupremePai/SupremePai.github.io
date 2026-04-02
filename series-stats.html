@@ -7,23 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0c1118;
-    --surface: #151d2b;
-    --surface2: #1c2738;
-    --surface3: #243045;
-    --border: #2a3650;
-    --accent: #4fc3f7;
-    --accent2: #81d4fa;
-    --accent-dim: rgba(79,195,247,0.12);
-    --green: #66bb6a;
-    --gold: #ffd54f;
-    --red: #ef5350;
-    --orange: #ffa726;
-    --text: #e8edf5;
-    --muted: #7b8fb0;
-    --muted2: #556380;
-    --hot: #ff7043;
-    --cold: #42a5f5;
+    --bg: #f5f3fa;
+    --surface: #ffffff;
+    --surface2: #ede7f6;
+    --surface3: #e0d4f0;
+    --border: #d5c9ed;
+    --accent: #6b3fa0;
+    --accent2: #8b5cc7;
+    --accent-dim: rgba(107,63,160,0.10);
+    --green: #2e7d32;
+    --gold: #c9920a;
+    --red: #c0392b;
+    --orange: #d4700a;
+    --text: #1e1a2e;
+    --muted: #7a6e96;
+    --muted2: #9e90b8;
+    --hot: #c0392b;
+    --cold: #1976d2;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -37,8 +37,8 @@
 
   /* Header */
   .header {
-    background: linear-gradient(135deg, #0d1926 0%, #162033 50%, #1a2a42 100%);
-    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #f0ebfa 0%, #ede7f6 100%);
+    border-bottom: 2px solid #d4a017;
     padding: 20px 28px;
     display: flex;
     align-items: center;
@@ -52,7 +52,7 @@
     font-family: 'Instrument Serif', serif;
     font-size: 26px;
     font-weight: 400;
-    color: var(--text);
+    color: #3b1f6e;
     letter-spacing: -0.5px;
   }
   .header h1 em { color: var(--accent); font-style: italic; }
@@ -69,7 +69,7 @@
     gap: 12px;
   }
   .season-select {
-    background: var(--surface);
+    background: #ffffff;
     border: 1px solid var(--border);
     color: var(--text);
     padding: 6px 10px;
@@ -81,7 +81,7 @@
   }
   .season-select:focus { border-color: var(--accent); }
   .series-count-select {
-    background: var(--surface);
+    background: #ffffff;
     border: 1px solid var(--border);
     color: var(--text);
     padding: 6px 10px;
@@ -133,7 +133,7 @@
     height: 26px;
     border-radius: 50%;
     background: var(--accent-dim);
-    border: 1px solid rgba(79,195,247,0.3);
+    border: 1px solid rgba(107,63,160,0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -161,7 +161,7 @@
   .search-inp::placeholder { color: var(--muted2); }
   .search-inp:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(79,195,247,0.1);
+    box-shadow: 0 0 0 3px rgba(107,63,160,0.1);
   }
   .search-inp.has-player {
     border-color: var(--green);
@@ -386,7 +386,7 @@
 
 <div class="header">
   <div>
-    <h1>&#9918; Supreme Pai's Series Stats Searcher</h1>
+    <h1><img src="pailogo.png" style="height:40px;vertical-align:middle;margin-right:10px;border-radius:4px;">Supreme Pai's Series Stats Searcher</h1>
     <div class="sub">Search any MLB player &middot; View recent series stats &middot; Side-by-side comparison</div>
   </div>
   <div class="header-right">
