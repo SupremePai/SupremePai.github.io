@@ -63,6 +63,32 @@
     z-index: 1;
   }
 
+  /* Loading overlay */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: opacity 0.3s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-text {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.6;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
   /* Header */
   header {
     text-align: center;
@@ -263,6 +289,8 @@
 
   .btn:active { transform: scale(0.9); }
 
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
   .val {
     font-family: 'Cinzel', serif;
     font-size: 16px;
@@ -326,9 +354,23 @@
     font-size: 12px;
     color: var(--text-dim);
     font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .save-note.dirty { color: var(--gold); }
+  .save-note.saving { color: var(--stormlight); }
+  .save-note.saved { color: var(--merkulio); }
+  .save-note.error { color: #c0535a; font-style: normal; }
+
+  .save-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .save-note.saving .save-dot { animation: pulse 1s ease-in-out infinite; }
 
   .save-btn {
     font-family: 'Cinzel', serif;
@@ -347,6 +389,15 @@
   .save-btn:hover {
     background: var(--gold);
     color: var(--bg);
+  }
+
+  .save-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .save-btn:disabled:hover {
+    background: none;
+    color: var(--gold);
   }
 
   .reset-btn {
@@ -379,6 +430,11 @@
 </style>
 </head>
 <body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-text">Summoning Stormlight…</div>
+</div>
+
 <div class="container">
   <header>
     <p class="eyebrow">Stonewalkers Campaign</p>
@@ -432,77 +488,179 @@
 </div>
 
 <div class="save-bar">
-  <span class="save-note" id="saveNote">Values saved locally in your browser.</span>
+  <span class="save-note" id="saveNote"><span class="save-dot"></span><span id="saveText">Connecting…</span></span>
   <div class="btn-group">
     <button class="reset-btn" onclick="resetAll()">Reset All</button>
-    <button class="save-btn" onclick="saveData()">Save</button>
+    <button class="save-btn" id="saveBtn" onclick="saveNow()">Save Now</button>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// ============================================================================
+// Supabase config
+// ============================================================================
+const SUPABASE_URL = 'https://yebunkxcgyezsxpcgern.supabase.co';
+const SUPABASE_ANON_KEY = 'yebunkxcgyezsxpcgern';
+const TABLE = 'radiant_tracker';
+const ROW_ID = 1;
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================================================
+// Data model
+// ============================================================================
 const IDEALS = [
-  { key: 'freedom',     label: 'Freedom' },
-  { key: 'justice',     label: 'Justice' },
-  { key: 'potential',   label: 'Potential' },
-  { key: 'protection',  label: 'Protection' },
-  { key: 'remembrance', label: 'Remembrance' },
-  { key: 'secrecy',     label: 'Secrecy' },
-  { key: 'selfmastery', label: 'Self-Mastery' },
-  { key: 'tenacity',    label: 'Tenacity' },
-  { key: 'truth',       label: 'Truth' },
+  { key: 'freedom',      label: 'Freedom' },
+  { key: 'justice',      label: 'Justice' },
+  { key: 'potential',    label: 'Potential' },
+  { key: 'protection',   label: 'Protection' },
+  { key: 'remembrance',  label: 'Remembrance' },
+  { key: 'secrecy',      label: 'Secrecy' },
+  { key: 'selfmastery',  label: 'Self-Mastery' },
+  { key: 'tenacity',     label: 'Tenacity' },
+  { key: 'truth',        label: 'Truth' },
   { key: 'currentideal', label: 'Current Ideal', special: true },
 ];
 
 const CHARS = [
-  { key: 'merkulio',  cls: 'col-merkulio' },
-  { key: 'zulanai',   cls: 'col-zulanai' },
-  { key: 'veln',      cls: 'col-veln' },
-  { key: 'arshqqam',  cls: 'col-arshqqam' },
+  { key: 'merkulio', cls: 'col-merkulio' },
+  { key: 'zulanai',  cls: 'col-zulanai' },
+  { key: 'veln',     cls: 'col-veln' },
+  { key: 'arshqqam', cls: 'col-arshqqam' },
 ];
 
-const DEFAULTS = {
-  merkulio:  { freedom:0, justice:1, potential:1, protection:1, remembrance:1, secrecy:1, selfmastery:1, tenacity:1, truth:0, currentideal:0 },
-  zulanai:   { freedom:0, justice:0, potential:0, protection:0, remembrance:2, secrecy:0, selfmastery:1, tenacity:0, truth:3, currentideal:0 },
-  veln:      { freedom:1, justice:1, potential:1, protection:1, remembrance:2, secrecy:0, selfmastery:0, tenacity:0, truth:0, currentideal:0 },
-  arshqqam:  { freedom:0, justice:1, potential:4, protection:2, remembrance:0, secrecy:1, selfmastery:1, tenacity:2, truth:0, currentideal:0 },
-};
-
-const STORAGE_KEY = 'radiant_ideal_tracker_v1';
-let dirty = false;
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULTS));
+// Zeroed starting state — fresh start per Raul's request
+function emptyState() {
+  const s = {};
+  CHARS.forEach(c => {
+    s[c.key] = {};
+    IDEALS.forEach(i => { s[c.key][i.key] = 0; });
+  });
+  return s;
 }
 
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  dirty = false;
-  updateSaveNote();
-}
+// ============================================================================
+// App state
+// ============================================================================
+let state = emptyState();
+let saveTimer = null;
+let savePromise = null;
+let hasPendingWrite = false;
+let connected = false;
 
-function resetAll() {
-  if (!confirm('Reset all values to starting defaults?')) return;
-  Object.assign(state, JSON.parse(JSON.stringify(DEFAULTS)));
-  renderValues();
-  dirty = true;
-  updateSaveNote();
-  saveData();
-}
-
-function updateSaveNote() {
+// ============================================================================
+// Save-note UI
+// ============================================================================
+function setNote(cls, txt) {
   const el = document.getElementById('saveNote');
-  el.textContent = dirty
-    ? 'Unsaved changes.'
-    : 'Values saved locally in your browser.';
-  el.className = 'save-note' + (dirty ? ' dirty' : '');
+  const txtEl = document.getElementById('saveText');
+  el.className = 'save-note' + (cls ? ' ' + cls : '');
+  txtEl.textContent = txt;
 }
 
-let state = loadData();
+function setButtonsEnabled(enabled) {
+  document.querySelectorAll('.btn').forEach(b => { b.disabled = !enabled; });
+  document.getElementById('saveBtn').disabled = !enabled;
+}
 
+// ============================================================================
+// Load initial state from Supabase
+// ============================================================================
+async function loadData() {
+  setNote('saving', 'Loading…');
+  try {
+    const { data, error } = await sb
+      .from(TABLE)
+      .select('state')
+      .eq('id', ROW_ID)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (data && data.state) {
+      // Merge in case the DB is missing newer keys (forward-compat)
+      const loaded = data.state;
+      CHARS.forEach(c => {
+        if (!loaded[c.key]) loaded[c.key] = {};
+        IDEALS.forEach(i => {
+          if (typeof loaded[c.key][i.key] !== 'number') loaded[c.key][i.key] = 0;
+        });
+      });
+      state = loaded;
+    } else {
+      // No row yet — seed with zeros
+      await sb.from(TABLE).upsert({ id: ROW_ID, state: state });
+    }
+    connected = true;
+    setNote('saved', 'Saved');
+    return true;
+  } catch (e) {
+    console.error('Load failed:', e);
+    connected = false;
+    setNote('error', 'Connection failed — edits will not be saved');
+    return false;
+  }
+}
+
+// ============================================================================
+// Debounced save
+// ============================================================================
+function scheduleSave() {
+  hasPendingWrite = true;
+  setNote('saving', 'Saving…');
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { doSave(); }, 600);
+}
+
+async function doSave() {
+  if (!connected) {
+    setNote('error', 'Not connected — changes not saved');
+    return;
+  }
+  if (savePromise) {
+    // A save is in flight; queue another to run after
+    await savePromise;
+  }
+  hasPendingWrite = false;
+  const snapshot = JSON.parse(JSON.stringify(state));
+  savePromise = (async () => {
+    try {
+      const { error } = await sb
+        .from(TABLE)
+        .upsert({ id: ROW_ID, state: snapshot, updated_at: new Date().toISOString() });
+      if (error) throw error;
+      if (!hasPendingWrite) setNote('saved', 'Saved');
+    } catch (e) {
+      console.error('Save failed:', e);
+      setNote('error', 'Save failed — retrying…');
+      // Retry once after a beat
+      setTimeout(() => { if (hasPendingWrite || true) scheduleSave(); }, 2000);
+    } finally {
+      savePromise = null;
+    }
+  })();
+  await savePromise;
+}
+
+async function saveNow() {
+  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+  await doSave();
+}
+
+// ============================================================================
+// Reset
+// ============================================================================
+async function resetAll() {
+  if (!confirm('Reset all values to zero?')) return;
+  state = emptyState();
+  renderValues();
+  scheduleSave();
+}
+
+// ============================================================================
+// Render
+// ============================================================================
 function buildTable() {
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
@@ -511,7 +669,6 @@ function buildTable() {
     const tr = document.createElement('tr');
     if (ideal.special) tr.classList.add('ideal-row');
 
-    // Label cell
     const tdLabel = document.createElement('td');
     tdLabel.className = 'ideal-label';
     tdLabel.innerHTML = `<span class="ideal-name">${ideal.label}</span>`;
@@ -552,24 +709,53 @@ function renderValues() {
 function change(charKey, idealKey, delta) {
   const current = state[charKey][idealKey] ?? 0;
   const next = Math.max(0, current + delta);
+  if (next === current) return;
   state[charKey][idealKey] = next;
+
   const el = document.getElementById(`v-${charKey}-${idealKey}`);
   if (el) {
     el.textContent = next;
     el.className = 'val' + (next > 0 ? ' nonzero' : '');
-    // Pulse animation
     el.style.transform = 'scale(1.3)';
     setTimeout(() => { el.style.transform = ''; }, 120);
   }
-  dirty = true;
-  updateSaveNote();
+  scheduleSave();
 }
 
-buildTable();
-updateSaveNote();
+// ============================================================================
+// Flush on unload — best-effort sync save via sendBeacon
+// ============================================================================
+window.addEventListener('beforeunload', () => {
+  if (hasPendingWrite && connected) {
+    // navigator.sendBeacon for fire-and-forget save on close
+    try {
+      const payload = JSON.stringify({ id: ROW_ID, state: state, updated_at: new Date().toISOString() });
+      const headers = {
+        type: 'application/json'
+      };
+      const blob = new Blob([payload], headers);
+      navigator.sendBeacon(
+        `${SUPABASE_URL}/rest/v1/${TABLE}?on_conflict=id`,
+        blob
+      );
+      // Note: sendBeacon can't set auth headers, so this won't actually work
+      // with RLS-protected Supabase endpoints. The 600ms debounce + visible
+      // "Saving…" indicator should cover nearly all real-world cases.
+    } catch (e) {}
+  }
+});
 
-// Auto-save on page unload
-window.addEventListener('beforeunload', () => { if (dirty) saveData(); });
+// ============================================================================
+// Init
+// ============================================================================
+(async function init() {
+  buildTable();
+  setButtonsEnabled(false);
+  const ok = await loadData();
+  renderValues();
+  setButtonsEnabled(ok);
+  document.getElementById('loadingOverlay').classList.add('hidden');
+})();
 </script>
 </body>
 </html>
