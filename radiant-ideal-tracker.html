@@ -10,6 +10,7 @@
     --bg: #0a0c10;
     --surface: #111318;
     --surface2: #181c24;
+    --surface3: #1f2330;
     --border: #2a2f3d;
     --border-bright: #3d4460;
     --text: #d4cfc4;
@@ -43,7 +44,6 @@
     overflow-x: hidden;
   }
 
-  /* Atmospheric background */
   body::before {
     content: '';
     position: fixed;
@@ -63,7 +63,6 @@
     z-index: 1;
   }
 
-  /* Loading overlay */
   .loading-overlay {
     position: fixed;
     inset: 0;
@@ -71,7 +70,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 200;
+    z-index: 500;
     transition: opacity 0.3s;
   }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
@@ -84,17 +83,9 @@
     opacity: 0.6;
     animation: pulse 1.5s ease-in-out infinite;
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-  }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
-  /* Header */
-  header {
-    text-align: center;
-    margin-bottom: 52px;
-  }
-
+  header { text-align: center; margin-bottom: 32px; }
   .eyebrow {
     font-family: 'Cinzel', serif;
     font-size: 10px;
@@ -104,7 +95,6 @@
     margin-bottom: 12px;
     opacity: 0.8;
   }
-
   h1 {
     font-family: 'Cinzel', serif;
     font-size: clamp(22px, 4vw, 36px);
@@ -114,7 +104,6 @@
     line-height: 1.2;
     margin-bottom: 10px;
   }
-
   .header-rule {
     width: 120px;
     height: 1px;
@@ -123,30 +112,126 @@
     opacity: 0.5;
   }
 
-  /* Table wrapper */
-  .table-wrap {
-    overflow-x: auto;
+  .session-bar {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 2px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
   }
+  .session-bar.active {
+    border-color: rgba(201,168,76,0.4);
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(201,168,76,0.04) 100%);
+  }
+  .session-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+  .session-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .session-name {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .session-name.inactive { color: var(--text-dim); font-weight: 400; font-style: italic; }
+  .session-meta { font-size: 11px; color: var(--text-dim); }
+  .session-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-  table {
+  .sbtn {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border-bright);
+    color: var(--text-dim);
+    padding: 7px 14px;
+    cursor: pointer;
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+  .sbtn:hover { border-color: var(--gold); color: var(--gold); }
+  .sbtn.primary { border-color: var(--gold); color: var(--gold); }
+  .sbtn.primary:hover { background: var(--gold); color: var(--bg); }
+  .sbtn.danger:hover { border-color: #c0535a; color: #c0535a; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 400;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    padding: 28px 32px;
+    width: min(440px, 90vw);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .modal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .modal-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .modal-input {
     width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    color: var(--text-bright);
+    padding: 10px 12px;
+    font-family: 'Crimson Pro', serif;
+    font-size: 14px;
+    border-radius: 2px;
+    outline: none;
+    margin-bottom: 18px;
   }
+  .modal-input:focus { border-color: var(--gold); }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
-  /* Column headers (characters) */
+  .table-wrap { overflow-x: auto; border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; min-width: 700px; }
+
   thead tr.char-row th {
     padding: 0 8px 0;
     text-align: center;
     vertical-align: bottom;
   }
-
   thead tr.char-row th:first-child {
     text-align: left;
-    width: 160px;
+    width: 180px;
   }
-
   .char-header {
     display: flex;
     flex-direction: column;
@@ -156,7 +241,6 @@
     position: relative;
     gap: 4px;
   }
-
   .char-header::after {
     content: '';
     position: absolute;
@@ -165,13 +249,7 @@
     right: 10%;
     height: 1px;
   }
-
-  .char-icon {
-    font-size: 22px;
-    margin-bottom: 4px;
-    filter: drop-shadow(0 0 6px currentColor);
-  }
-
+  .char-icon { font-size: 22px; margin-bottom: 4px; filter: drop-shadow(0 0 6px currentColor); }
   .char-name {
     font-family: 'Cinzel', serif;
     font-size: 12px;
@@ -179,74 +257,58 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
+  .char-path { font-size: 11px; opacity: 0.55; font-style: italic; letter-spacing: 0.02em; }
 
-  .char-path {
-    font-size: 11px;
-    opacity: 0.55;
-    font-style: italic;
-    letter-spacing: 0.02em;
-  }
-
-  /* Merkulio */
   th.col-merkulio .char-header { background: var(--merkulio-glow); }
   th.col-merkulio .char-header::after { background: var(--merkulio); opacity: 0.4; }
   th.col-merkulio .char-name { color: var(--merkulio); }
-
-  /* zulanai */
   th.col-zulanai .char-header { background: var(--zulanai-glow); }
   th.col-zulanai .char-header::after { background: var(--zulanai); opacity: 0.4; }
   th.col-zulanai .char-name { color: var(--zulanai); }
-
-  /* Vel'n */
   th.col-veln .char-header { background: var(--veln-glow); }
   th.col-veln .char-header::after { background: var(--veln); opacity: 0.4; }
   th.col-veln .char-name { color: var(--veln); }
-
-  /* Arshqqam */
   th.col-arshqqam .char-header { background: var(--arshqqam-glow); }
   th.col-arshqqam .char-header::after { background: var(--arshqqam); opacity: 0.4; }
   th.col-arshqqam .char-name { color: var(--arshqqam); }
 
-  /* Divider row */
-  thead tr.divider-row th {
-    height: 2px;
-    padding: 0;
-    background: var(--border);
-  }
+  thead tr.divider-row th { height: 2px; padding: 0; background: var(--border); }
   thead tr.divider-row th:first-child { background: transparent; }
 
-  /* Ideal rows */
-  tbody tr {
+  tbody tr.ideal-data-row {
     border-bottom: 1px solid rgba(42,47,61,0.5);
     transition: background 0.15s;
   }
+  tbody tr.ideal-data-row:hover { background: rgba(255,255,255,0.015); }
 
-  tbody tr:hover {
-    background: rgba(255,255,255,0.015);
+  td.ideal-label { padding: 14px 16px 14px 4px; vertical-align: middle; }
+  .ideal-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
   }
-
-  /* Ideal label cell */
-  td.ideal-label {
-    padding: 14px 16px 14px 4px;
-    vertical-align: middle;
+  .ideal-name-wrap:hover .ideal-name { color: var(--text-bright); }
+  .ideal-caret {
+    font-size: 9px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    width: 10px;
+    display: inline-block;
   }
-
+  tr.ideal-data-row.expanded .ideal-caret { transform: rotate(90deg); color: var(--gold); }
   .ideal-name {
     font-family: 'Cinzel', serif;
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-dim);
-    display: block;
+    transition: color 0.2s;
   }
+  tr.ideal-data-row.expanded .ideal-name { color: var(--gold); }
 
-  /* Value cell */
-  td.val-cell {
-    padding: 10px 8px;
-    text-align: center;
-    vertical-align: middle;
-  }
-
+  td.val-cell { padding: 10px 8px; text-align: center; vertical-align: middle; }
   .counter {
     display: inline-flex;
     align-items: center;
@@ -259,10 +321,7 @@
     min-width: 90px;
     justify-content: center;
   }
-
-  .counter:hover {
-    border-color: var(--border-bright);
-  }
+  .counter:hover { border-color: var(--border-bright); }
 
   .btn {
     background: none;
@@ -281,14 +340,8 @@
     width: 22px;
     height: 22px;
   }
-
-  .btn:hover {
-    color: var(--text-bright);
-    background: rgba(255,255,255,0.06);
-  }
-
+  .btn:hover { color: var(--text-bright); background: rgba(255,255,255,0.06); }
   .btn:active { transform: scale(0.9); }
-
   .btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
   .val {
@@ -301,40 +354,96 @@
     transition: color 0.2s;
     color: var(--text-dim);
   }
-
   .val.nonzero { color: var(--text-bright); }
 
-  /* Color tints per character column */
   td.col-merkulio .counter:hover { border-color: var(--merkulio); box-shadow: 0 0 8px var(--merkulio-glow); }
   td.col-merkulio .val.nonzero { color: var(--merkulio); }
   td.col-merkulio .btn:hover { color: var(--merkulio); }
-
   td.col-zulanai .counter:hover { border-color: var(--zulanai); box-shadow: 0 0 8px var(--zulanai-glow); }
   td.col-zulanai .val.nonzero { color: var(--zulanai); }
   td.col-zulanai .btn:hover { color: var(--zulanai); }
-
   td.col-veln .counter:hover { border-color: var(--veln); box-shadow: 0 0 8px var(--veln-glow); }
   td.col-veln .val.nonzero { color: var(--veln); }
   td.col-veln .btn:hover { color: var(--veln); }
-
   td.col-arshqqam .counter:hover { border-color: var(--arshqqam); box-shadow: 0 0 8px var(--arshqqam-glow); }
   td.col-arshqqam .val.nonzero { color: var(--arshqqam); }
   td.col-arshqqam .btn:hover { color: var(--arshqqam); }
 
-  /* Current ideal row — special */
-  tr.ideal-row td.ideal-label .ideal-name {
-    color: var(--gold);
-    opacity: 0.8;
-  }
-
-  tr.ideal-row td.val-cell .counter {
+  tr.ideal-data-row.current-ideal td.ideal-label .ideal-name { color: var(--gold); opacity: 0.8; }
+  tr.ideal-data-row.current-ideal td.val-cell .counter {
     background: var(--gold-dim);
     border-color: rgba(201,168,76,0.2);
   }
+  tr.ideal-data-row.current-ideal td.val-cell .val.nonzero { color: var(--gold) !important; }
 
-  tr.ideal-row td.val-cell .val.nonzero { color: var(--gold) !important; }
+  tr.history-row { display: none; }
+  tr.history-row.open { display: table-row; }
+  tr.history-row td {
+    padding: 0;
+    background: var(--surface);
+    border-bottom: 1px solid rgba(42,47,61,0.5);
+  }
+  .history-wrap {
+    padding: 16px 20px 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .history-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 12px;
+  }
+  .history-session { margin-bottom: 14px; }
+  .history-session:last-child { margin-bottom: 0; }
+  .history-session-hdr {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .history-session-name { flex: 1; }
+  .history-session-date { color: var(--text-dim); font-weight: 400; font-size: 10px; letter-spacing: 0.08em; }
+  .history-events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 12px;
+  }
+  .history-event {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 0;
+  }
+  .history-char {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .history-char.merkulio { color: var(--merkulio); }
+  .history-char.zulanai { color: var(--zulanai); }
+  .history-char.veln { color: var(--veln); }
+  .history-char.arshqqam { color: var(--arshqqam); }
+  .history-delta-plus { color: var(--merkulio); font-weight: 600; }
+  .history-delta-minus { color: #c0535a; font-weight: 600; }
+  .history-arrow { color: var(--text-dim); }
+  .history-newval {
+    font-family: 'Cinzel', serif;
+    color: var(--text-bright);
+    font-weight: 600;
+  }
 
-  /* Save indicator */
   .save-bar {
     position: fixed;
     bottom: 0;
@@ -349,7 +458,6 @@
     z-index: 100;
     gap: 12px;
   }
-
   .save-note {
     font-size: 12px;
     color: var(--text-dim);
@@ -358,11 +466,9 @@
     align-items: center;
     gap: 8px;
   }
-
   .save-note.saving { color: var(--stormlight); }
   .save-note.saved { color: var(--merkulio); }
   .save-note.error { color: #c0535a; font-style: normal; }
-
   .save-dot {
     width: 6px;
     height: 6px;
@@ -371,34 +477,6 @@
     opacity: 0.6;
   }
   .save-note.saving .save-dot { animation: pulse 1s ease-in-out infinite; }
-
-  .save-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 8px 20px;
-    cursor: pointer;
-    border-radius: 1px;
-    transition: background 0.2s, color 0.2s;
-  }
-
-  .save-btn:hover {
-    background: var(--gold);
-    color: var(--bg);
-  }
-
-  .save-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  .save-btn:disabled:hover {
-    background: none;
-    color: var(--gold);
-  }
 
   .reset-btn {
     font-family: 'Cinzel', serif;
@@ -411,22 +489,15 @@
     padding: 8px 16px;
     cursor: pointer;
     border-radius: 1px;
-    transition: border-color 0.2s, color 0.2s;
+    transition: all 0.2s;
   }
+  .reset-btn:hover { border-color: #c0535a; color: #c0535a; }
 
-  .reset-btn:hover {
-    border-color: #c0535a;
-    color: #c0535a;
-  }
-
-  .btn-group { display: flex; gap: 8px; }
-
-  /* Fade in on load */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .container { animation: fadeUp 0.5s ease both; }
+  .container, .session-bar { animation: fadeUp 0.5s ease both; }
 </style>
 </head>
 <body>
@@ -441,7 +512,20 @@
     <h1>Radiant Ideal Tracker</h1>
     <div class="header-rule"></div>
   </header>
+</div>
 
+<div class="session-bar" id="sessionBar">
+  <div class="session-info">
+    <span class="session-label">Session</span>
+    <div>
+      <div class="session-name inactive" id="sessionName">No active session</div>
+      <div class="session-meta" id="sessionMeta"></div>
+    </div>
+  </div>
+  <div class="session-actions" id="sessionActions"></div>
+</div>
+
+<div class="container">
   <div class="table-wrap">
     <table id="tracker">
       <thead>
@@ -480,35 +564,43 @@
           <th></th><th></th><th></th><th></th><th></th>
         </tr>
       </thead>
-      <tbody id="tbody">
-        <!-- Rows injected by JS -->
-      </tbody>
+      <tbody id="tbody"></tbody>
     </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">New Session</div>
+    <div class="modal-hint" id="modalHint">Give this session a name.</div>
+    <input class="modal-input" id="modalInput" placeholder="Session 1: the beginning" maxlength="80">
+    <div class="modal-actions">
+      <button class="sbtn" id="modalCancel">Cancel</button>
+      <button class="sbtn primary" id="modalConfirm">Save</button>
+    </div>
   </div>
 </div>
 
 <div class="save-bar">
   <span class="save-note" id="saveNote"><span class="save-dot"></span><span id="saveText">Connecting…</span></span>
-  <div class="btn-group">
-    <button class="reset-btn" onclick="resetAll()">Reset All</button>
-    <button class="save-btn" id="saveBtn" onclick="saveNow()">Save Now</button>
-  </div>
+  <button class="reset-btn" onclick="resetAll()">Reset All</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================================================
-// Supabase config
+// Supabase config — using the sb_publishable_ key format, same as nachos.
+// Paste the exact same URL + publishable key your nachos page uses.
 // ============================================================================
 const SUPABASE_URL = 'https://yebunkxcgyezsxpcgern.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_ie0DrRA1KwO6rTMqa0LsBA_MBDPXVbi';
-const TABLE = 'radiant_tracker';
-const ROW_ID = 1;
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_PUBLISHABLE_KEY';
+const T_SESSIONS = 'radiant_sessions';
+const T_EVENTS = 'radiant_events';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================================================
-// Data model
+// Model
 // ============================================================================
 const IDEALS = [
   { key: 'freedom',      label: 'Freedom' },
@@ -524,33 +616,23 @@ const IDEALS = [
 ];
 
 const CHARS = [
-  { key: 'merkulio', cls: 'col-merkulio' },
-  { key: 'zulanai',  cls: 'col-zulanai' },
-  { key: 'veln',     cls: 'col-veln' },
-  { key: 'arshqqam', cls: 'col-arshqqam' },
+  { key: 'merkulio', cls: 'col-merkulio', label: 'Merkulio' },
+  { key: 'zulanai',  cls: 'col-zulanai',  label: 'zulanai' },
+  { key: 'veln',     cls: 'col-veln',     label: "Vel'n" },
+  { key: 'arshqqam', cls: 'col-arshqqam', label: 'Arshqqam' },
 ];
 
-// Zeroed starting state — fresh start per Raul's request
-function emptyState() {
-  const s = {};
-  CHARS.forEach(c => {
-    s[c.key] = {};
-    IDEALS.forEach(i => { s[c.key][i.key] = 0; });
-  });
-  return s;
-}
-
 // ============================================================================
-// App state
+// State
 // ============================================================================
-let state = emptyState();
-let saveTimer = null;
-let savePromise = null;
-let hasPendingWrite = false;
+let currentSession = null;   // active session row, or null
+let currentValues = {};      // { char: { ideal: value } } derived from events
+let allEvents = [];          // full event history, newest first
+let allSessions = [];        // all sessions, newest first
 let connected = false;
 
 // ============================================================================
-// Save-note UI
+// UI helpers
 // ============================================================================
 function setNote(cls, txt) {
   const el = document.getElementById('saveNote');
@@ -559,41 +641,188 @@ function setNote(cls, txt) {
   txtEl.textContent = txt;
 }
 
-function setButtonsEnabled(enabled) {
-  document.querySelectorAll('.btn').forEach(b => { b.disabled = !enabled; });
-  document.getElementById('saveBtn').disabled = !enabled;
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function charLabel(k) {
+  const c = CHARS.find(x => x.key === k);
+  return c ? c.label : k;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ============================================================================
-// Load initial state from Supabase
+// Modal — returns a promise resolving to the entered name or null
+// ============================================================================
+function promptSessionName(defaultName = '', title = 'New Session') {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('modalOverlay');
+    const input = document.getElementById('modalInput');
+    document.getElementById('modalTitle').textContent = title;
+    input.value = defaultName;
+    overlay.classList.add('open');
+    setTimeout(() => { input.focus(); input.select(); }, 50);
+
+    const cleanup = () => {
+      overlay.classList.remove('open');
+      document.getElementById('modalConfirm').onclick = null;
+      document.getElementById('modalCancel').onclick = null;
+      input.onkeydown = null;
+    };
+
+    document.getElementById('modalConfirm').onclick = () => {
+      const v = input.value.trim();
+      if (!v) return;
+      cleanup();
+      resolve(v);
+    };
+    document.getElementById('modalCancel').onclick = () => { cleanup(); resolve(null); };
+    input.onkeydown = (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); document.getElementById('modalConfirm').click(); }
+      else if (e.key === 'Escape') { e.preventDefault(); document.getElementById('modalCancel').click(); }
+    };
+  });
+}
+
+// ============================================================================
+// Sessions
+// ============================================================================
+async function startSession() {
+  const defaultName = `Session ${allSessions.length + 1}: `;
+  const name = await promptSessionName(defaultName, 'New Session');
+  if (!name) return false;
+  try {
+    const { data, error } = await sb
+      .from(T_SESSIONS)
+      .insert({ name: name })
+      .select()
+      .single();
+    if (error) throw error;
+    currentSession = data;
+    allSessions.unshift(data);
+    renderSessionBar();
+    return true;
+  } catch (e) {
+    console.error('Start session failed:', e);
+    setNote('error', 'Could not start session');
+    return false;
+  }
+}
+
+async function endSession() {
+  if (!currentSession) return;
+  if (!confirm(`End session "${currentSession.name}"?`)) return;
+  try {
+    const now = new Date().toISOString();
+    const { error } = await sb
+      .from(T_SESSIONS)
+      .update({ ended_at: now })
+      .eq('id', currentSession.id);
+    if (error) throw error;
+    const idx = allSessions.findIndex(s => s.id === currentSession.id);
+    if (idx >= 0) allSessions[idx].ended_at = now;
+    currentSession = null;
+    renderSessionBar();
+  } catch (e) {
+    console.error('End session failed:', e);
+    setNote('error', 'Could not end session');
+  }
+}
+
+async function renameSession() {
+  if (!currentSession) return;
+  const name = await promptSessionName(currentSession.name, 'Rename Session');
+  if (!name || name === currentSession.name) return;
+  try {
+    const { error } = await sb
+      .from(T_SESSIONS)
+      .update({ name: name })
+      .eq('id', currentSession.id);
+    if (error) throw error;
+    currentSession.name = name;
+    const idx = allSessions.findIndex(s => s.id === currentSession.id);
+    if (idx >= 0) allSessions[idx].name = name;
+    renderSessionBar();
+    // Re-render any open history rows since session names may appear there
+    document.querySelectorAll('tr.history-row.open').forEach(row => {
+      const idealKey = row.dataset.ideal;
+      row.querySelector('.history-wrap').innerHTML = renderHistoryForIdeal(idealKey);
+    });
+  } catch (e) {
+    console.error('Rename failed:', e);
+    setNote('error', 'Rename failed');
+  }
+}
+
+function renderSessionBar() {
+  const bar = document.getElementById('sessionBar');
+  const name = document.getElementById('sessionName');
+  const meta = document.getElementById('sessionMeta');
+  const actions = document.getElementById('sessionActions');
+
+  if (currentSession) {
+    bar.classList.add('active');
+    name.classList.remove('inactive');
+    name.textContent = currentSession.name;
+    meta.textContent = 'Started ' + formatDate(currentSession.started_at);
+    actions.innerHTML = `
+      <button class="sbtn" onclick="renameSession()">Rename</button>
+      <button class="sbtn danger" onclick="endSession()">End Session</button>
+    `;
+  } else {
+    bar.classList.remove('active');
+    name.classList.add('inactive');
+    name.textContent = 'No active session';
+    meta.textContent = allSessions.length > 0
+      ? `${allSessions.length} past session${allSessions.length === 1 ? '' : 's'}`
+      : '';
+    actions.innerHTML = `<button class="sbtn primary" onclick="startSession()">Start New Session</button>`;
+  }
+}
+
+// ============================================================================
+// Load: sessions + events
 // ============================================================================
 async function loadData() {
   setNote('saving', 'Loading…');
   try {
-    const { data, error } = await sb
-      .from(TABLE)
-      .select('state')
-      .eq('id', ROW_ID)
-      .maybeSingle();
+    const [sessionsRes, eventsRes] = await Promise.all([
+      sb.from(T_SESSIONS).select('*').order('started_at', { ascending: false }),
+      sb.from(T_EVENTS).select('*').order('occurred_at', { ascending: false }),
+    ]);
+    if (sessionsRes.error) throw sessionsRes.error;
+    if (eventsRes.error) throw eventsRes.error;
 
-    if (error) throw error;
+    allSessions = sessionsRes.data || [];
+    allEvents = eventsRes.data || [];
+    currentSession = allSessions.find(s => !s.ended_at) || null;
 
-    if (data && data.state) {
-      // Merge in case the DB is missing newer keys (forward-compat)
-      const loaded = data.state;
-      CHARS.forEach(c => {
-        if (!loaded[c.key]) loaded[c.key] = {};
-        IDEALS.forEach(i => {
-          if (typeof loaded[c.key][i.key] !== 'number') loaded[c.key][i.key] = 0;
-        });
-      });
-      state = loaded;
-    } else {
-      // No row yet — seed with zeros
-      await sb.from(TABLE).upsert({ id: ROW_ID, state: state });
+    // Derive current values from events. Events are newest-first, so the first
+    // event we see for a given (char, ideal) pair is the most recent.
+    currentValues = {};
+    CHARS.forEach(c => {
+      currentValues[c.key] = {};
+      IDEALS.forEach(i => { currentValues[c.key][i.key] = 0; });
+    });
+    const seen = new Set();
+    for (const ev of allEvents) {
+      const k = `${ev.character}|${ev.ideal}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      if (currentValues[ev.character] && currentValues[ev.character][ev.ideal] !== undefined) {
+        currentValues[ev.character][ev.ideal] = ev.value;
+      }
     }
+
     connected = true;
-    setNote('saved', 'Saved');
+    renderSessionBar();
+    setNote('saved', 'Loaded');
     return true;
   } catch (e) {
     console.error('Load failed:', e);
@@ -603,63 +832,135 @@ async function loadData() {
   }
 }
 
-// ============================================================================
-// Debounced save
-// ============================================================================
-function scheduleSave() {
-  hasPendingWrite = true;
+async function recordEvent(charKey, idealKey, delta, newValue) {
+  if (!connected) { setNote('error', 'Not connected — change not saved'); return false; }
   setNote('saving', 'Saving…');
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => { doSave(); }, 600);
+  try {
+    const payload = {
+      character: charKey,
+      ideal: idealKey,
+      value: newValue,
+      delta: delta,
+      session_id: currentSession ? currentSession.id : null,
+    };
+    const { data, error } = await sb
+      .from(T_EVENTS)
+      .insert(payload)
+      .select()
+      .single();
+    if (error) throw error;
+    allEvents.unshift(data);
+    setNote('saved', 'Saved');
+    return true;
+  } catch (e) {
+    console.error('Record event failed:', e);
+    setNote('error', 'Save failed');
+    return false;
+  }
 }
 
-async function doSave() {
-  if (!connected) {
-    setNote('error', 'Not connected — changes not saved');
+// ============================================================================
+// +/- handler — gates on an active session
+// ============================================================================
+async function change(charKey, idealKey, delta) {
+  if (!currentSession) {
+    const shouldStart = confirm('No active session. Start one now?');
+    if (!shouldStart) return;
+    const ok = await startSession();
+    if (!ok) return;
+  }
+
+  const current = currentValues[charKey][idealKey] ?? 0;
+  const next = Math.max(0, current + delta);
+  if (next === current) return;
+
+  // Optimistic UI
+  currentValues[charKey][idealKey] = next;
+  renderCell(charKey, idealKey);
+  pulseCell(charKey, idealKey);
+
+  const ok = await recordEvent(charKey, idealKey, delta, next);
+  if (!ok) {
+    // Revert on failure
+    currentValues[charKey][idealKey] = current;
+    renderCell(charKey, idealKey);
     return;
   }
-  if (savePromise) {
-    // A save is in flight; queue another to run after
-    await savePromise;
+
+  // If this ideal's history is currently expanded, refresh it
+  const historyRow = document.getElementById(`hist-${idealKey}`);
+  if (historyRow && historyRow.classList.contains('open')) {
+    historyRow.querySelector('.history-wrap').innerHTML = renderHistoryForIdeal(idealKey);
   }
-  hasPendingWrite = false;
-  const snapshot = JSON.parse(JSON.stringify(state));
-  savePromise = (async () => {
-    try {
-      const { error } = await sb
-        .from(TABLE)
-        .upsert({ id: ROW_ID, state: snapshot, updated_at: new Date().toISOString() });
-      if (error) throw error;
-      if (!hasPendingWrite) setNote('saved', 'Saved');
-    } catch (e) {
-      console.error('Save failed:', e);
-      setNote('error', 'Save failed — retrying…');
-      // Retry once after a beat
-      setTimeout(() => { if (hasPendingWrite || true) scheduleSave(); }, 2000);
-    } finally {
-      savePromise = null;
-    }
-  })();
-  await savePromise;
 }
 
-async function saveNow() {
-  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
-  await doSave();
+function renderCell(charKey, idealKey) {
+  const el = document.getElementById(`v-${charKey}-${idealKey}`);
+  if (!el) return;
+  const v = currentValues[charKey][idealKey] ?? 0;
+  el.textContent = v;
+  el.className = 'val' + (v > 0 ? ' nonzero' : '');
+}
+
+function pulseCell(charKey, idealKey) {
+  const el = document.getElementById(`v-${charKey}-${idealKey}`);
+  if (!el) return;
+  el.style.transform = 'scale(1.3)';
+  setTimeout(() => { el.style.transform = ''; }, 120);
+}
+
+function renderAllCells() {
+  IDEALS.forEach(ideal => CHARS.forEach(char => renderCell(char.key, ideal.key)));
 }
 
 // ============================================================================
-// Reset
+// Reset — logs compensating events, preserves history
 // ============================================================================
 async function resetAll() {
-  if (!confirm('Reset all values to zero?')) return;
-  state = emptyState();
-  renderValues();
-  scheduleSave();
+  if (!confirm('Reset all values to zero?\n\nHistory is preserved — this logs reset events in the active session.')) return;
+  if (!currentSession) {
+    const shouldStart = confirm('No active session. Start one before resetting?');
+    if (!shouldStart) return;
+    const ok = await startSession();
+    if (!ok) return;
+  }
+
+  setNote('saving', 'Resetting…');
+  const toReset = [];
+  CHARS.forEach(c => {
+    IDEALS.forEach(i => {
+      const v = currentValues[c.key][i.key] ?? 0;
+      if (v !== 0) {
+        toReset.push({
+          character: c.key,
+          ideal: i.key,
+          value: 0,
+          delta: -v,
+          session_id: currentSession.id,
+        });
+      }
+    });
+  });
+  if (!toReset.length) { setNote('saved', 'Already zero'); return; }
+  try {
+    const { data, error } = await sb.from(T_EVENTS).insert(toReset).select();
+    if (error) throw error;
+    (data || []).forEach(ev => allEvents.unshift(ev));
+    CHARS.forEach(c => IDEALS.forEach(i => { currentValues[c.key][i.key] = 0; }));
+    renderAllCells();
+    document.querySelectorAll('tr.history-row.open').forEach(row => {
+      const ik = row.dataset.ideal;
+      row.querySelector('.history-wrap').innerHTML = renderHistoryForIdeal(ik);
+    });
+    setNote('saved', 'Reset complete');
+  } catch (e) {
+    console.error('Reset failed:', e);
+    setNote('error', 'Reset failed');
+  }
 }
 
 // ============================================================================
-// Render
+// Table build
 // ============================================================================
 function buildTable() {
   const tbody = document.getElementById('tbody');
@@ -667,11 +968,18 @@ function buildTable() {
 
   IDEALS.forEach(ideal => {
     const tr = document.createElement('tr');
-    if (ideal.special) tr.classList.add('ideal-row');
+    tr.className = 'ideal-data-row';
+    if (ideal.special) tr.classList.add('current-ideal');
+    tr.dataset.ideal = ideal.key;
+    tr.id = `row-${ideal.key}`;
 
     const tdLabel = document.createElement('td');
     tdLabel.className = 'ideal-label';
-    tdLabel.innerHTML = `<span class="ideal-name">${ideal.label}</span>`;
+    tdLabel.innerHTML = `
+      <div class="ideal-name-wrap" onclick="toggleHistory('${ideal.key}')">
+        <span class="ideal-caret">▶</span>
+        <span class="ideal-name">${ideal.label}</span>
+      </div>`;
     tr.appendChild(tdLabel);
 
     CHARS.forEach(char => {
@@ -679,8 +987,7 @@ function buildTable() {
       td.className = `val-cell ${char.cls}`;
       td.dataset.char = char.key;
       td.dataset.ideal = ideal.key;
-
-      const val = state[char.key][ideal.key] ?? 0;
+      const val = currentValues[char.key]?.[ideal.key] ?? 0;
       td.innerHTML = `
         <div class="counter">
           <button class="btn" onclick="change('${char.key}','${ideal.key}',-1)" title="Decrease">−</button>
@@ -689,71 +996,101 @@ function buildTable() {
         </div>`;
       tr.appendChild(td);
     });
-
     tbody.appendChild(tr);
+
+    const histTr = document.createElement('tr');
+    histTr.className = 'history-row';
+    histTr.id = `hist-${ideal.key}`;
+    histTr.dataset.ideal = ideal.key;
+    histTr.innerHTML = `<td colspan="5"><div class="history-wrap"></div></td>`;
+    tbody.appendChild(histTr);
   });
 }
 
-function renderValues() {
-  IDEALS.forEach(ideal => {
-    CHARS.forEach(char => {
-      const el = document.getElementById(`v-${char.key}-${ideal.key}`);
-      if (!el) return;
-      const v = state[char.key][ideal.key] ?? 0;
-      el.textContent = v;
-      el.className = 'val' + (v > 0 ? ' nonzero' : '');
+// ============================================================================
+// History rendering
+// ============================================================================
+function toggleHistory(idealKey) {
+  const dataRow = document.getElementById(`row-${idealKey}`);
+  const histRow = document.getElementById(`hist-${idealKey}`);
+  const isOpen = histRow.classList.contains('open');
+
+  if (isOpen) {
+    histRow.classList.remove('open');
+    dataRow.classList.remove('expanded');
+  } else {
+    histRow.querySelector('.history-wrap').innerHTML = renderHistoryForIdeal(idealKey);
+    histRow.classList.add('open');
+    dataRow.classList.add('expanded');
+  }
+}
+
+function renderHistoryForIdeal(idealKey) {
+  const events = allEvents.filter(e => e.ideal === idealKey);
+  if (!events.length) {
+    return `<div class="history-empty">No changes recorded yet.</div>`;
+  }
+
+  const sessionMap = {};
+  allSessions.forEach(s => { sessionMap[s.id] = s; });
+
+  // Group events by session_id
+  const grouped = {};
+  const orderedSessionIds = [];
+  events.forEach(ev => {
+    const sid = ev.session_id == null ? 'nosession' : ev.session_id;
+    if (!(sid in grouped)) {
+      grouped[sid] = [];
+      orderedSessionIds.push(sid);
+    }
+    grouped[sid].push(ev);
+  });
+
+  // Sessions newest-first
+  orderedSessionIds.sort((a, b) => {
+    if (a === 'nosession') return 1;
+    if (b === 'nosession') return -1;
+    const sa = sessionMap[a], sb = sessionMap[b];
+    if (!sa || !sb) return 0;
+    return new Date(sb.started_at) - new Date(sa.started_at);
+  });
+
+  let html = '';
+  orderedSessionIds.forEach(sid => {
+    const evs = grouped[sid];
+    const sess = sid === 'nosession' ? null : sessionMap[sid];
+    const title = sess ? sess.name : 'No session';
+    const date = sess ? formatDate(sess.started_at) : '';
+
+    html += `<div class="history-session">`;
+    html += `<div class="history-session-hdr">`;
+    html += `<span class="history-session-name">${escapeHtml(title)}</span>`;
+    if (date) html += `<span class="history-session-date">${date}</span>`;
+    html += `</div>`;
+    html += `<div class="history-events">`;
+    // Oldest-first within a session so the narrative reads forward
+    evs.slice().reverse().forEach(ev => {
+      const deltaStr = ev.delta > 0 ? `+${ev.delta}` : `${ev.delta}`;
+      const deltaCls = ev.delta > 0 ? 'history-delta-plus' : 'history-delta-minus';
+      html += `<span class="history-event">`;
+      html += `<span class="history-char ${ev.character}">${charLabel(ev.character)}</span>`;
+      html += `<span class="${deltaCls}">${deltaStr}</span>`;
+      html += `<span class="history-arrow">→</span>`;
+      html += `<span class="history-newval">${ev.value}</span>`;
+      html += `</span>`;
     });
+    html += `</div></div>`;
   });
+  return html;
 }
-
-function change(charKey, idealKey, delta) {
-  const current = state[charKey][idealKey] ?? 0;
-  const next = Math.max(0, current + delta);
-  if (next === current) return;
-  state[charKey][idealKey] = next;
-
-  const el = document.getElementById(`v-${charKey}-${idealKey}`);
-  if (el) {
-    el.textContent = next;
-    el.className = 'val' + (next > 0 ? ' nonzero' : '');
-    el.style.transform = 'scale(1.3)';
-    setTimeout(() => { el.style.transform = ''; }, 120);
-  }
-  scheduleSave();
-}
-
-// ============================================================================
-// Flush on unload — best-effort sync save via sendBeacon
-// ============================================================================
-window.addEventListener('beforeunload', () => {
-  if (hasPendingWrite && connected) {
-    // navigator.sendBeacon for fire-and-forget save on close
-    try {
-      const payload = JSON.stringify({ id: ROW_ID, state: state, updated_at: new Date().toISOString() });
-      const headers = {
-        type: 'application/json'
-      };
-      const blob = new Blob([payload], headers);
-      navigator.sendBeacon(
-        `${SUPABASE_URL}/rest/v1/${TABLE}?on_conflict=id`,
-        blob
-      );
-      // Note: sendBeacon can't set auth headers, so this won't actually work
-      // with RLS-protected Supabase endpoints. The 600ms debounce + visible
-      // "Saving…" indicator should cover nearly all real-world cases.
-    } catch (e) {}
-  }
-});
 
 // ============================================================================
 // Init
 // ============================================================================
 (async function init() {
   buildTable();
-  setButtonsEnabled(false);
-  const ok = await loadData();
-  renderValues();
-  setButtonsEnabled(ok);
+  await loadData();
+  renderAllCells();
   document.getElementById('loadingOverlay').classList.add('hidden');
 })();
 </script>
