@@ -168,6 +168,15 @@
       color: var(--pop);
     }
 
+    /* ── Paused project (no link, greyed out) ── */
+    .project.paused { cursor: default; }
+    .project.paused:hover { padding-left: 0; }
+    .project.paused .project-name,
+    .project.paused:hover .project-name { color: #c4c2bb; }
+    .project.paused .project-desc { color: #c4c2bb; }
+    .project.paused .project-tag,
+    .project.paused:hover .project-tag { color: #c4c2bb; border-color: var(--border); border-style: dashed; }
+
     /* ── Footer ── */
     footer {
       max-width: 620px;
@@ -227,13 +236,14 @@
         <div class="project-tag">Tool</div>
       </a>
 
-      <a class="project" href="/radiant-ideal-tracker.html">
+      <!-- Paused: page kept at /radiant-ideal-tracker.html but not linked. To restore, change this div back to <a class="project" href="/radiant-ideal-tracker.html"> and drop "paused". -->
+      <div class="project paused" aria-disabled="true">
         <div>
           <div class="project-name">Radiant Ideal Tracker</div>
           <div class="project-desc">A tool documenting adherence to radiant ideals in the Stormlight RPG</div>
         </div>
-        <div class="project-tag">Tool</div>
-      </a>
+        <div class="project-tag">Paused</div>
+      </div>
 
       <a class="project" href="/nacho-man.html">
         <div>
