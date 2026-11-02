@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier List · Supreme Pai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15/Sortable.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f2;
+      --ink: #1a1917;
+      --muted: #9a9890;
+      --border: #e0ddd7;
+      --pop: #2a9d8f;
+      --card: #ffffff;
+      --danger: #c0563f;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      min-height: 100vh;
+      padding: 0 20px;
+    }
+
+    a { color: inherit; }
+
+    .wrap { max-width: 960px; margin: 0 auto; }
+
+    /* ── Header ── */
+    header { padding: 44px 0 28px; }
+
+    .back {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 18px;
+      transition: color 0.2s;
+    }
+    .back:hover { color: var(--pop); }
+
+    header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    header h1.placeholder { color: var(--muted); font-style: italic; }
+
+    .meta { font-size: 0.74rem; color: var(--muted); line-height: 1.7; }
+    .meta .by { color: var(--pop); font-style: italic; }
+
+    /* ── Tier grid ── */
+    .tiers {
+      border: 1px solid var(--border);
+      background: var(--card);
+      margin-bottom: 18px;
+    }
+
+    .row {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      min-height: 64px;
+    }
+    .row:last-child { border-bottom: none; }
+
+    .label {
+      flex: 0 0 104px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 8px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      color: #1a1917;
+      word-break: break-word;
+      outline: none;
+    }
+    .label.long { font-size: 1.05rem; }
+
+    .items {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 6px;
+      padding: 9px;
+      min-height: 64px;
+    }
+
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 7px 10px;
+      font-size: 0.76rem;
+      line-height: 1.3;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .chip.has-note { cursor: pointer; }
+    .chip.has-note::after { content: ' ✦'; color: var(--pop); font-size: 0.6rem; }
+    .chip.has-note:hover { border-color: var(--pop); }
+
+    .row-unranked .label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'DM Mono', monospace; color: var(--muted); background: var(--bg); }
+
+    /* ── Edit mode ── */
+    body.editing .chip { cursor: grab; background: #fff; }
+    body.editing .chip:hover { border-color: var(--pop); }
+    body.editing .label { cursor: text; }
+    .sortable-ghost { opacity: 0.35; }
+    .sortable-chosen { border-color: var(--pop) !important; }
+
+    .row-tools {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      padding: 6px;
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .row-tools button, .row-tools input[type=color] {
+      width: 28px; height: 22px;
+      font: inherit; font-size: 0.7rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .row-tools input[type=color] { padding: 1px; }
+    .row-tools button:hover { border-color: var(--pop); color: var(--pop); }
+    .row-tools button.del:hover { border-color: var(--danger); color: var(--danger); }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .panel h2 {
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .fields {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 1.2fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    input[type=text], input[type=date], input[type=password], textarea {
+      width: 100%;
+      font: inherit;
+      font-size: 0.8rem;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 8px 9px;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--pop); }
+    input[readonly] { color: var(--muted); }
+    textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+
+    .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+    .btn {
+      font: inherit;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .btn:hover { border-color: var(--pop); color: var(--pop); }
+    .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn.primary:hover { background: var(--pop); border-color: var(--pop); color: #fff; }
+    .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    .hint { font-size: 0.68rem; color: var(--muted); line-height: 1.6; font-style: italic; }
+
+    .status { font-size: 0.72rem; margin-top: 12px; line-height: 1.6; min-height: 1.2em; }
+    .status.ok { color: var(--pop); }
+    .status.err { color: var(--danger); }
+
+    .notice {
+      border: 1px dashed var(--border);
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.7;
+    }
+
+    /* ── Modal ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(26, 25, 23, 0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+    .overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 460px;
+      padding: 22px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    }
+    .modal h3 {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .modal p { font-size: 0.78rem; line-height: 1.7; }
+    .modal .note-body { white-space: pre-wrap; }
+    .modal .field { margin-bottom: 12px; }
+    .modal ol { font-size: 0.74rem; line-height: 1.7; padding-left: 18px; margin: 8px 0 14px; }
+
+    footer {
+      padding: 30px 0 48px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--pop); }
+
+    @media (max-width: 640px) {
+      body { padding: 0 12px; }
+      .label { flex-basis: 64px; font-size: 1.35rem; padding: 8px 4px; }
+      .label.long { font-size: 0.85rem; }
+      .chip { font-size: 0.7rem; padding: 6px 8px; }
+      .fields { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="back" href="tierlists.html">← All tier lists</a>
+      <h1 id="title">Loading…</h1>
+      <p class="meta" id="meta"></p>
+    </header>
+
+    <section class="panel" id="editPanel" hidden>
+      <h2>Details</h2>
+      <div class="fields">
+        <div class="field"><label for="fTitle">Title</label><input type="text" id="fTitle" placeholder="Sandwich Tier List"></div>
+        <div class="field"><label for="fAuthors">Authors</label><input type="text" id="fAuthors" placeholder="Servants of the Flame"></div>
+        <div class="field"><label for="fDate">Date</label><input type="date" id="fDate"></div>
+        <div class="field"><label for="fId">URL id</label><input type="text" id="fId" placeholder="sandwich-tier-list"></div>
+      </div>
+
+      <h2>Add items</h2>
+      <textarea id="paste" placeholder="Paste items, one per line.&#10;&#10;Or paste a whole list in this shape to import it:&#10;Sandwich Tier List&#10;Authors: Servants of the Flame&#10;S&#10;- BEC&#10;- Burger&#10;A&#10;- Gyro"></textarea>
+      <div class="btns">
+        <button class="btn" id="btnAddItems">Add to unranked</button>
+        <button class="btn" id="btnImport">Import full list</button>
+        <button class="btn" id="btnAddTier">+ Add tier</button>
+        <span class="hint">Drag items between tiers. Click an item to rename it or add a note. Click a tier label to rename it.</span>
+      </div>
+
+      <div class="btns" style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
+        <button class="btn primary" id="btnPublish">Publish</button>
+        <button class="btn" id="btnDownload">Download JSON</button>
+        <button class="btn" id="btnToken">GitHub token</button>
+        <a class="btn" id="btnView" href="#">View page</a>
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <div id="board"></div>
+
+    <footer>
+      <span><a href="index.html">supremepai.com</a> ✦ <a href="tierlists.html">tier lists</a></span>
+      <span id="footRight"></span>
+    </footer>
+  </div>
+
+  <!-- Item / note modal -->
+  <div class="overlay" id="itemOverlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div id="itemModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Token modal -->
+  <div class="overlay" id="tokenOverlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3>GitHub token</h3>
+      <p>Publishing saves the list to your repo through GitHub's API. The token is kept only in this browser, never in the site's code.</p>
+      <ol>
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
+        <li>Repository access: <b>Only select repositories</b> → <b>SupremePai.github.io</b>.</li>
+        <li>Permissions → Repository → <b>Contents: Read and write</b>. Nothing else.</li>
+        <li>Generate, copy, and paste it below.</li>
+      </ol>
+      <div class="field">
+        <label for="tokenInput">Token</label>
+        <input type="password" id="tokenInput" placeholder="github_pat_…" autocomplete="off">
+      </div>
+      <div class="btns">
+        <button class="btn primary" id="tokenSave">Save &amp; test</button>
+        <button class="btn danger" id="tokenClear">Remove</button>
+        <button class="btn" id="tokenClose">Close</button>
+      </div>
+      <div class="status" id="tokenStatus"></div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    // ── Config ──
+    const GH = { owner: 'SupremePai', repo: 'SupremePai.github.io', branch: 'main', dir: 'data/tierlists' };
+    const TOKEN_KEY = 'tierlist_gh_token';
+    const PALETTE = ['#ff8a80', '#ffb878', '#ffd56b', '#fff07a', '#c5e88a', '#93dba0', '#8fd3d6', '#9bb8f0', '#b9a3e8', '#e3a3d6'];
+    const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+    const params = new URLSearchParams(location.search);
+    const isNew = params.has('new');
+    let editMode = isNew || params.get('edit') === '1';
+    let listId = params.get('id');
+
+    let state = null;          // { id, title, authors, date, tiers:[{label,color,items:[{text,note,uid}]}], unranked:[...] }
+    let loadedFromId = null;   // id of the file this list was loaded from (null for a new list)
+    let idTouched = false;
+    let dirty = false;
+    let uidSeq = 0;
+    let sortables = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    // ── Helpers ──
+    function getToken() { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } }
+    function setToken(t) { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch {} }
+
+    function todayISO() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    function prettyDate(iso) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return '';
+      const [y, m, d] = iso.split('-').map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    function slugify(s) {
+      return (s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+        .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60).replace(/-+$/, '');
+    }
+    function el(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function mkItem(text, note) { return { text: String(text).trim(), note: (note || '').trim(), uid: ++uidSeq }; }
+    function allItems() { return state.tiers.flatMap(t => t.items).concat(state.unranked); }
+    function markDirty() { if (editMode) dirty = true; }
+
+    function blankList() {
+      return {
+        id: '', title: '', authors: '', date: todayISO(),
+        tiers: ['S', 'A', 'B', 'C', 'D', 'F'].map((label, i) => ({ label, color: PALETTE[i], items: [] })),
+        unranked: []
+      };
+    }
+
+    function normalize(raw) {
+      const toItem = (x) => typeof x === 'string' ? mkItem(x) : mkItem(x && x.text || '', x && x.note);
+      const tiers = Array.isArray(raw.tiers) ? raw.tiers : [];
+      return {
+        id: String(raw.id || ''),
+        title: String(raw.title || ''),
+        authors: String(raw.authors || ''),
+        date: String(raw.date || ''),
+        tiers: tiers.map((t, i) => ({
+          label: String(t.label ?? ''),
+          color: /^#[0-9a-f]{6}$/i.test(t.color || '') ? t.color : PALETTE[i % PALETTE.length],
+          items: (Array.isArray(t.items) ? t.items : []).map(toItem).filter(x => x.text)
+        })),
+        unranked: (Array.isArray(raw.unranked) ? raw.unranked : []).map(toItem).filter(x => x.text)
+      };
+    }
+
+    function toJSON() {
+      const clean = (it) => it.note ? { text: it.text, note: it.note } : { text: it.text };
+      return JSON.stringify({
+        id: state.id,
+        title: state.title,
+        authors: state.authors,
+        date: state.date,
+        tiers: state.tiers.map(t => ({ label: t.label, color: t.color, items: t.items.map(clean) })),
+        unranked: state.unranked.map(clean)
+      }, null, 2) + '\n';
+    }
+
+    // Text import. Plain lines are tier labels; "- item" lines go into the current tier.
+    // The first plain line that isn't followed by an item is the title. "Authors: …" sets the authors.
+    function parseListText(txt) {
+      const lines = txt.split(/\r?\n/).map(l => l.trim());
+      const isItem = (l) => /^[-*•]\s*/.test(l);
+      const out = { title: '', authors: '', tiers: [], loose: [] };
+      let cur = null;
+      for (let i = 0; i < lines.length; i++) {
+        const l = lines[i];
+        if (!l) continue;
+        const a = l.match(/^authors?\s*:\s*(.*)$/i);
+        if (a) { out.authors = a[1].trim(); continue; }
+        if (isItem(l)) {
+          const text = l.replace(/^[-*•]\s*/, '').trim();
+          if (text) (cur ? cur.items : out.loose).push(mkItem(text));
+          continue;
+        }
+        let next = '';
+        for (let j = i + 1; j < lines.length; j++) { if (lines[j]) { next = lines[j]; break; } }
+        if (!out.title && out.tiers.length === 0 && !isItem(next)) { out.title = l; continue; }
+        cur = { label: l, color: PALETTE[out.tiers.length % PALETTE.length], items: [] };
+        out.tiers.push(cur);
+      }
+      return out;
+    }
+
+    // ── Rendering ──
+    function renderHeader() {
+      const h = $('title');
+      h.textContent = state.title || (editMode ? 'Untitled tier list' : 'Tier list');
+      h.classList.toggle('placeholder', !state.title);
+      document.title = `${state.title || 'Tier List'} · Supreme Pai`;
+      const meta = $('meta');
+      meta.textContent = '';
+      const bits = [];
+      if (state.authors) {
+        meta.append('by ');
+        meta.append(el('span', 'by', state.authors));
+      }
+      const n = state.tiers.reduce((s, t) => s + t.items.length, 0);
+      if (state.date) bits.push(prettyDate(state.date));
+      bits.push(`${n} item${n === 1 ? '' : 's'}`);
+      meta.append((state.authors ? ' · ' : '') + bits.join(' · '));
+    }
+
+    function chipFor(item) {
+      const c = el('div', 'chip', item.text);
+      c.dataset.uid = item.uid;
+      if (item.note) c.classList.add('has-note');
+      if (editMode) c.title = 'Click to edit · drag to move';
+      else if (item.note) c.title = 'Click for note';
+      c.addEventListener('click', () => {
+        if (editMode) openItemEditor(item);
+        else if (item.note) openNote(item);
+      });
+      return c;
+    }
+
+    function renderBoard() {
+      sortables.forEach(s => s.destroy());
+      sortables = [];
+      const board = $('board');
+      board.textContent = '';
+      const grid = el('div', 'tiers');
+
+      state.tiers.forEach((tier, i) => {
+        const row = el('div', 'row');
+        const label = el('div', 'label', tier.label);
+        label.style.background = tier.color;
+        if (tier.label.length > 3) label.classList.add('long');
+        if (editMode) {
+          try { label.contentEditable = 'plaintext-only'; } catch { label.contentEditable = 'true'; }
+          if (label.contentEditable !== 'plaintext-only') label.contentEditable = 'true';
+          label.spellcheck = false;
+          label.addEventListener('input', () => {
+            tier.label = label.textContent.trim();
+            label.classList.toggle('long', tier.label.length > 3);
+            markDirty();
+          });
+          label.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); label.blur(); } });
+        }
+        const items = el('div', 'items');
+        items.dataset.tier = i;
+        tier.items.forEach(it => items.append(chipFor(it)));
+        row.append(label, items);
+
+        if (editMode) {
+          const tools = el('div', 'row-tools');
+          const color = document.createElement('input');
+          color.type = 'color'; color.value = tier.color; color.title = 'Tier color';
+          color.addEventListener('input', () => { tier.color = color.value; label.style.background = color.value; markDirty(); });
+          const up = el('button', '', '↑'); up.title = 'Move tier up'; up.disabled = i === 0;
+          const down = el('button', '', '↓'); down.title = 'Move tier down'; down.disabled = i === state.tiers.length - 1;
+          const del = el('button', 'del', '✕'); del.title = 'Remove tier (its items go to unranked)';
+          up.addEventListener('click', () => moveTier(i, -1));
+          down.addEventListener('click', () => moveTier(i, 1));
+          del.addEventListener('click', () => removeTier(i));
+          tools.append(color, up, down, del);
+          row.append(tools);
+        }
+        grid.append(row);
+      });
+
+      if (editMode) {
+        const row = el('div', 'row row-unranked');
+        const label = el('div', 'label', 'Unranked');
+        const items = el('div', 'items');
+        items.dataset.tier = 'unranked';
+        state.unranked.forEach(it => items.append(chipFor(it)));
+        row.append(label, items);
+        grid.append(row);
+      }
+
+      if (!state.tiers.length && !editMode) {
+        board.append(el('div', 'notice', 'This list has no tiers yet.'));
+        return;
+      }
+      board.append(grid);
+
+      if (editMode && window.Sortable) {
+        grid.querySelectorAll('.items').forEach(container => {
+          sortables.push(Sortable.create(container, {
+            group: 'tiers',
+            animation: 150,
+            forceFallback: true,
+            fallbackTolerance: 4,
+            delay: 150,
+            delayOnTouchOnly: true,
+            onEnd: () => { syncFromDom(); markDirty(); renderHeader(); }
+          }));
+        });
+      } else if (editMode && !window.Sortable) {
+        setStatus('Drag-and-drop library failed to load. Check your connection and reload.', 'err');
+      }
+    }
+
+    function render() { renderHeader(); renderBoard(); renderFooter(); }
+
+    function renderFooter() {
+      const right = $('footRight');
+      right.textContent = '';
+      if (!editMode && state && getToken()) {
+        const a = el('a', '', 'Edit this list');
+        a.href = `tierlist.html?id=${encodeURIComponent(state.id)}&edit=1`;
+        right.append(a);
+      } else if (!editMode) {
+        right.textContent = '✦';
+      }
+    }
+
+    // Rebuild tier arrays from the current DOM order after a drag.
+    function syncFromDom() {
+      const byUid = new Map(allItems().map(it => [String(it.uid), it]));
+      document.querySelectorAll('#board .items').forEach(container => {
+        const list = [...container.querySelectorAll('.chip')].map(c => byUid.get(c.dataset.uid)).filter(Boolean);
+        const key = container.dataset.tier;
+        if (key === 'unranked') state.unranked = list;
+        else if (state.tiers[+key]) state.tiers[+key].items = list;
+      });
+    }
+
+    function moveTier(i, d) {
+      const j = i + d;
+      if (j < 0 || j >= state.tiers.length) return;
+      [state.tiers[i], state.tiers[j]] = [state.tiers[j], state.tiers[i]];
+      markDirty(); renderBoard();
+    }
+    function removeTier(i) {
+      const t = state.tiers[i];
+      state.unranked.push(...t.items);
+      state.tiers.splice(i, 1);
+      markDirty(); render();
+    }
+    function addTier() {
+      const used = new Set(state.tiers.map(t => t.label));
+      const label = ['S', 'A', 'B', 'C', 'D', 'E', 'F'].find(l => !used.has(l)) || 'New';
+      state.tiers.push({ label, color: PALETTE[state.tiers.length % PALETTE.length], items: [] });
+      markDirty(); renderBoard();
+    }
+
+    // ── Modals ──
+    function openOverlay(id) { $(id).classList.add('open'); }
+    function closeOverlay(id) { $(id).classList.remove('open'); }
+    document.querySelectorAll('.overlay').forEach(o => {
+      o.addEventListener('mousedown', (e) => { if (e.target === o) o.classList.remove('open'); });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open'));
+    });
+
+    function openNote(item) {
+      const body = $('itemModalBody');
+      body.textContent = '';
+      body.append(el('h3', '', item.text));
+      body.append(el('p', 'note-body', item.note));
+      const btns = el('div', 'btns');
+      const close = el('button', 'btn', 'Close');
+      close.addEventListener('click', () => closeOverlay('itemOverlay'));
+      btns.append(close);
+      body.append(btns);
+      openOverlay('itemOverlay');
+    }
+
+    function openItemEditor(item) {
+      const body = $('itemModalBody');
+      body.textContent = '';
+      body.append(el('h3', '', 'Edit item'));
+      const f1 = el('div', 'field');
+      const l1 = el('label', '', 'Name'); l1.htmlFor = 'itemText';
+      const t = document.createElement('input'); t.type = 'text'; t.id = 'itemText'; t.value = item.text;
+      f1.append(l1, t);
+      const f2 = el('div', 'field');
+      const l2 = el('label', '', 'Note (optional, shown on the public page)'); l2.htmlFor = 'itemNote';
+      const n = document.createElement('textarea'); n.id = 'itemNote'; n.value = item.note; n.style.minHeight = '80px';
+      n.placeholder = 'Why it landed here…';
+      f2.append(l2, n);
+      const btns = el('div', 'btns');
+      const save = el('button', 'btn primary', 'Save');
+      const del = el('button', 'btn danger', 'Delete item');
+      const cancel = el('button', 'btn', 'Cancel');
+      save.addEventListener('click', () => {
+        const text = t.value.trim();
+        if (!text) { t.focus(); return; }
+        item.text = text; item.note = n.value.trim();
+        markDirty(); closeOverlay('itemOverlay'); render();
+      });
+      del.addEventListener('click', () => {
+        state.tiers.forEach(tr => { tr.items = tr.items.filter(x => x !== item); });
+        state.unranked = state.unranked.filter(x => x !== item);
+        markDirty(); closeOverlay('itemOverlay'); render();
+      });
+      cancel.addEventListener('click', () => closeOverlay('itemOverlay'));
+      t.addEventListener('keydown', (e) => { if (e.key === 'Enter') save.click(); });
+      btns.append(save, del, cancel);
+      body.append(f1, f2, btns);
+      openOverlay('itemOverlay');
+      t.focus();
+    }
+
+    // ── Edit panel ──
+    function setStatus(msg, kind) {
+      const s = $('status');
+      s.textContent = msg || '';
+      s.className = 'status' + (kind ? ' ' + kind : '');
+    }
+
+    function fillFields() {
+      $('fTitle').value = state.title;
+      $('fAuthors').value = state.authors;
+      $('fDate').value = state.date;
+      $('fId').value = state.id;
+      $('fId').readOnly = !!loadedFromId;
+      $('fId').title = loadedFromId ? 'The id of a published list is fixed (it is the URL).' : '';
+      updateViewLink();
+    }
+    function updateViewLink() {
+      const id = state.id || loadedFromId;
+      $('btnView').href = id ? `tierlist.html?id=${encodeURIComponent(id)}` : 'tierlists.html';
+    }
+
+    function wirePanel() {
+      $('editPanel').hidden = false;
+      document.body.classList.add('editing');
+
+      $('fTitle').addEventListener('input', () => {
+        state.title = $('fTitle').value.trim();
+        if (!loadedFromId && !idTouched) { state.id = slugify(state.title); $('fId').value = state.id; updateViewLink(); }
+        markDirty(); renderHeader();
+      });
+      $('fAuthors').addEventListener('input', () => { state.authors = $('fAuthors').value.trim(); markDirty(); renderHeader(); });
+      $('fDate').addEventListener('input', () => { state.date = $('fDate').value; markDirty(); renderHeader(); });
+      $('fId').addEventListener('input', () => {
+        if (loadedFromId) return;
+        idTouched = true;
+        state.id = $('fId').value.trim().toLowerCase();
+        markDirty(); updateViewLink();
+      });
+
+      $('btnAddItems').addEventListener('click', () => {
+        const lines = $('paste').value.split(/\r?\n/).map(l => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean);
+        if (!lines.length) { setStatus('Paste at least one item first.', 'err'); return; }
+        lines.forEach(l => state.unranked.push(mkItem(l)));
+        $('paste').value = '';
+        markDirty(); render();
+        setStatus(`Added ${lines.length} item${lines.length === 1 ? '' : 's'} to Unranked.`, 'ok');
+      });
+
+      $('btnImport').addEventListener('click', () => {
+        const parsed = parseListText($('paste').value);
+        const count = parsed.tiers.reduce((s, t) => s + t.items.length, 0) + parsed.loose.length;
+        if (!parsed.tiers.length && !parsed.loose.length) { setStatus('Nothing to import. Put tier labels on their own lines and items on lines starting with "-".', 'err'); return; }
+        if (allItems().length && !confirm('Importing replaces the tiers and items already on this list. Continue?')) return;
+        if (parsed.tiers.length) state.tiers = parsed.tiers;
+        state.unranked = parsed.loose;
+        if (parsed.title) state.title = parsed.title;
+        if (parsed.authors) state.authors = parsed.authors;
+        if (!loadedFromId && !idTouched) state.id = slugify(state.title);
+        $('paste').value = '';
+        fillFields(); markDirty(); render();
+        setStatus(`Imported ${parsed.tiers.length} tier${parsed.tiers.length === 1 ? '' : 's'} and ${count} item${count === 1 ? '' : 's'}.`, 'ok');
+      });
+
+      $('btnAddTier').addEventListener('click', addTier);
+      $('btnDownload').addEventListener('click', () => {
+        const blob = new Blob([toJSON()], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${state.id || 'tier-list'}.json`;
+        document.body.append(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      });
+      $('btnToken').addEventListener('click', openTokenModal);
+      $('btnPublish').addEventListener('click', publish);
+      $('btnView').addEventListener('click', (e) => {
+        if (dirty && !confirm('You have unpublished changes. Leave anyway?')) e.preventDefault();
+        else dirty = false;
+      });
+
+      window.addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+    }
+
+    // ── GitHub API ──
+    function b64encode(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      return btoa(bin);
+    }
+    function b64decode(b64) {
+      const bin = atob(b64.replace(/\s/g, ''));
+      const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+    async function gh(path, opts = {}) {
+      return fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/${path}`, {
+        cache: 'no-store',
+        ...opts,
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${getToken()}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          ...(opts.body ? { 'Content-Type': 'application/json' } : {})
+        }
+      });
+    }
+    async function ghError(r, what) {
+      let msg = '';
+      try { msg = (await r.json()).message || ''; } catch {}
+      if (r.status === 401) return new Error('GitHub rejected the token (401). It may be expired or mistyped. Use "GitHub token" to replace it.');
+      if (r.status === 403) return new Error(`GitHub refused ${what} (403). Check that the token has Contents: Read and write on SupremePai.github.io.`);
+      if (r.status === 409) return new Error('GitHub reported a conflict (409). Someone or something changed the file at the same time. Try Publish again.');
+      return new Error(`GitHub error while ${what}: ${r.status} ${msg}`.trim());
+    }
+    async function getFile(path) {
+      const r = await gh(`contents/${path}?ref=${GH.branch}`);
+      if (r.status === 404) return null;
+      if (!r.ok) throw await ghError(r, `reading ${path}`);
+      const j = await r.json();
+      return { sha: j.sha, text: b64decode(j.content || '') };
+    }
+    async function putFile(path, text, message, sha) {
+      const body = { message, content: b64encode(text), branch: GH.branch };
+      if (sha) body.sha = sha;
+      const r = await gh(`contents/${path}`, { method: 'PUT', body: JSON.stringify(body) });
+      if (!r.ok) throw await ghError(r, `saving ${path}`);
+      return r.json();
+    }
+
+    function indexEntry() {
+      const first = state.tiers.find(t => t.items.length);
+      return {
+        id: state.id,
+        title: state.title,
+        authors: state.authors,
+        date: state.date,
+        count: state.tiers.reduce((s, t) => s + t.items.length, 0),
+        top: first ? { label: first.label, color: first.color, items: first.items.slice(0, 6).map(i => i.text) } : null
+      };
+    }
+
+    async function publish() {
+      syncFromDom();
+      if (!getToken()) { openTokenModal(); setStatus('Add a GitHub token first, then press Publish again.', 'err'); return; }
+      if (!state.title) { setStatus('Give the list a title first.', 'err'); $('fTitle').focus(); return; }
+      if (!ID_RE.test(state.id)) { setStatus('The URL id can only use lowercase letters, numbers and single dashes (e.g. sandwich-tier-list).', 'err'); $('fId').focus(); return; }
+      if (state.id === 'index') { setStatus('"index" is reserved. Pick another URL id.', 'err'); return; }
+      if (state.unranked.length && !confirm(`${state.unranked.length} item(s) are still unranked and won't show on the public page. Publish anyway?`)) return;
+
+      const btn = $('btnPublish');
+      btn.disabled = true;
+      setStatus('Publishing…');
+      try {
+        if (!state.date) state.date = todayISO();
+        const path = `${GH.dir}/${state.id}.json`;
+        const existing = await getFile(path);
+        if (existing && loadedFromId !== state.id &&
+            !confirm(`A list with the id "${state.id}" already exists. Overwrite it?`)) {
+          setStatus('Publish cancelled.'); return;
+        }
+        await putFile(path, toJSON(), `Tier list: ${state.title}`, existing && existing.sha);
+
+        const idxPath = `${GH.dir}/index.json`;
+        const idx = await getFile(idxPath);
+        let lists = [];
+        if (idx) { try { lists = JSON.parse(idx.text).lists || []; } catch { lists = []; } }
+        lists = lists.filter(l => l.id !== state.id);
+        lists.push(indexEntry());
+        lists.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (a.title || '').localeCompare(b.title || ''));
+        await putFile(idxPath, JSON.stringify({ lists }, null, 2) + '\n', `Tier list index: ${state.title}`, idx && idx.sha);
+
+        loadedFromId = state.id;
+        dirty = false;
+        fillFields();
+        history.replaceState(null, '', `?id=${encodeURIComponent(state.id)}&edit=1`);
+        setStatus(`Published. The public page updates in about 1–2 minutes: supremepai.com/tierlist.html?id=${state.id}`, 'ok');
+      } catch (e) {
+        setStatus(e.message || String(e), 'err');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ── Token modal ──
+    function openTokenModal() {
+      $('tokenInput').value = getToken();
+      $('tokenStatus').textContent = getToken() ? 'A token is saved in this browser.' : '';
+      $('tokenStatus').className = 'status';
+      openOverlay('tokenOverlay');
+    }
+    $('tokenClose').addEventListener('click', () => closeOverlay('tokenOverlay'));
+    $('tokenClear').addEventListener('click', () => {
+      setToken(''); $('tokenInput').value = '';
+      $('tokenStatus').textContent = 'Token removed from this browser.'; $('tokenStatus').className = 'status ok';
+      if (state) renderFooter();
+    });
+    $('tokenSave').addEventListener('click', async () => {
+      const t = $('tokenInput').value.trim();
+      const s = $('tokenStatus');
+      if (!t) { s.textContent = 'Paste a token first.'; s.className = 'status err'; return; }
+      setToken(t);
+      s.textContent = 'Testing…'; s.className = 'status';
+      try {
+        const r = await gh('');
+        if (!r.ok) throw await ghError(r, 'checking the repo');
+        const j = await r.json();
+        if (j.permissions && j.permissions.push === false) throw new Error('Token works but cannot write to the repo. Give it Contents: Read and write.');
+        s.textContent = 'Token saved and working.'; s.className = 'status ok';
+        if (state) renderFooter();
+      } catch (e) {
+        s.textContent = (e.message || String(e)) + ' (Token is saved anyway. Remove it if it is wrong.)'; s.className = 'status err';
+      }
+    });
+
+    // ── Load ──
+    function showError(title, msg) {
+      $('title').textContent = title;
+      $('meta').textContent = '';
+      const board = $('board');
+      board.textContent = '';
+      board.append(el('div', 'notice', msg));
+    }
+
+    async function load() {
+      if (isNew) {
+        state = blankList();
+        wirePanel(); fillFields(); render();
+        return;
+      }
+      if (!listId) { location.replace('tierlists.html'); return; }
+      if (!ID_RE.test(listId)) { showError('Not found', 'That tier list link looks malformed.'); return; }
+      try {
+        let text = null;
+        if (editMode && getToken()) {
+          try { const f = await getFile(`${GH.dir}/${listId}.json`); if (f) text = f.text; } catch (e) { console.warn(e); }
+        }
+        if (text == null) {
+          const r = await fetch(`${GH.dir}/${listId}.json`, { cache: 'no-cache' });
+          if (r.status === 404) { showError('Not found', 'No tier list with that id. If it was just published, give it a minute or two and refresh.'); return; }
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          text = await r.text();
+        }
+        state = normalize(JSON.parse(text));
+        if (!state.id) state.id = listId;
+        loadedFromId = listId;
+        if (editMode) { wirePanel(); fillFields(); }
+        render();
+      } catch (e) {
+        showError('Couldn’t load this list', `Something went wrong loading it (${e.message || e}). Try refreshing.`);
+      }
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "lists": [
+    {
+      "id": "sandwiches",
+      "title": "Sandwich Tier List",
+      "authors": "Servants of the Flame",
+      "date": "2026-11-02",
+      "count": 47,
+      "top": {
+        "label": "S",
+        "color": "#ff8a80",
+        "items": [
+          "BEC",
+          "Burger",
+          "Chicken Cutlet Sandwich"
+        ]
+      }
+    }
+  ]
+}

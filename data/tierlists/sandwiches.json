@@ -1,0 +1,186 @@
+{
+  "id": "sandwiches",
+  "title": "Sandwich Tier List",
+  "authors": "Servants of the Flame",
+  "date": "2026-11-02",
+  "tiers": [
+    {
+      "label": "S",
+      "color": "#ff8a80",
+      "items": [
+        {
+          "text": "BEC"
+        },
+        {
+          "text": "Burger"
+        },
+        {
+          "text": "Chicken Cutlet Sandwich"
+        }
+      ]
+    },
+    {
+      "label": "A",
+      "color": "#ffb878",
+      "items": [
+        {
+          "text": "Gyro"
+        },
+        {
+          "text": "SEC"
+        },
+        {
+          "text": "Jewish Lox Classic"
+        },
+        {
+          "text": "Cheesesteak"
+        },
+        {
+          "text": "Pastrami Sandwich"
+        },
+        {
+          "text": "Caprese"
+        },
+        {
+          "text": "Cubano"
+        },
+        {
+          "text": "Ice Cream Sandwich"
+        }
+      ]
+    },
+    {
+      "label": "B",
+      "color": "#ffd56b",
+      "items": [
+        {
+          "text": "BLT"
+        },
+        {
+          "text": "Grilled Cheese"
+        },
+        {
+          "text": "Banh Mi"
+        },
+        {
+          "text": "Falafel Sandwich"
+        },
+        {
+          "text": "Hot Dog"
+        },
+        {
+          "text": "Mortadella"
+        },
+        {
+          "text": "Turkey Club"
+        },
+        {
+          "text": "Fried Chicken Sandwich"
+        },
+        {
+          "text": "Pulled Pork"
+        },
+        {
+          "text": "Lobster Roll"
+        }
+      ]
+    },
+    {
+      "label": "C",
+      "color": "#fff07a",
+      "items": [
+        {
+          "text": "Buttered Roll"
+        },
+        {
+          "text": "Cream Cheese Bagel"
+        },
+        {
+          "text": "Cucumber Sandwich"
+        },
+        {
+          "text": "PB&J"
+        },
+        {
+          "text": "Tuna Salad Sandwich"
+        },
+        {
+          "text": "Italian Sub"
+        },
+        {
+          "text": "Meatball Sub"
+        },
+        {
+          "text": "Peanut Butter Banana"
+        },
+        {
+          "text": "Eggplant Parm Sandwich"
+        },
+        {
+          "text": "Shrimp Po'boy"
+        }
+      ]
+    },
+    {
+      "label": "D",
+      "color": "#c5e88a",
+      "items": [
+        {
+          "text": "Bacon Sandwich"
+        },
+        {
+          "text": "Tuna Melt"
+        },
+        {
+          "text": "Chip Buddy"
+        },
+        {
+          "text": "Egg Salad Sandwich"
+        },
+        {
+          "text": "Sloppy Joe"
+        },
+        {
+          "text": "Mayo Sandwich"
+        },
+        {
+          "text": "Lapponese"
+        },
+        {
+          "text": "Cheese Sandwich"
+        },
+        {
+          "text": "Steak Sandwich"
+        },
+        {
+          "text": "Ham & Cheese Sandwich"
+        },
+        {
+          "text": "S'mores"
+        },
+        {
+          "text": "Thanksgiving Sandwich"
+        },
+        {
+          "text": "Knuckle Sandwich"
+        },
+        {
+          "text": "Filet 'O Fish"
+        },
+        {
+          "text": "Spam Sandwich"
+        }
+      ]
+    },
+    {
+      "label": "F",
+      "color": "#93dba0",
+      "items": [
+        {
+          "text": "Ketchup Sandwich"
+        }
+      ]
+    }
+  ],
+  "unranked": []
+}
